@@ -1,0 +1,104 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">A Necessary Loot System</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Overview</a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Adminstration <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Administrate Players</a>
+                        </li>
+                        <li><a href="#">Administrate Items</a>
+                        </li>
+                        <li><a href="#">Administrate Instances</a>
+                        </li>
+                        <li><a href="#">Administrate Raids</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Change Settings</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Statistics</a>
+                        </li>
+                        <li><a href="#">View Items</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</nav>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>Overview</h1>
+        <p>An overview of current players, planned and finished raids.</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Players</h2>
+            <p>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Points</th>
+                    <th>Activity</th>
+                </tr>
+                <tr ng-repeat="player in vm.players">
+                <td>{{player.name}}</td>
+                    <td>{{player.points}}</td>
+                    <td>{{player.activity}}</td>
+                </tr>                
+            </table>
+            </p>
+
+        </div>
+
+        <div class="col-md-4">
+            <h2>Planned Raids</h2>
+            <p></p>
+
+        </div>
+
+        <div class="col-md-4">
+            <h2>Finished Raids</h2>
+            <p></p>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <footer>
+        <p>&copy; A Necessary Evil 2015</p>
+    </footer>
+</div>
+<!-- /container -->

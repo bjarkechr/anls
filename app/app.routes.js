@@ -1,13 +1,19 @@
-'use strict';
-angular
-    .module('anlsApp')
-    .config(config);
+(function () {
+    'use strict';
+    angular
+        .module('anlsApp')
+        .config(config);
 
-function config($routeProvider) {
-    $routeProvider
-        .when('/avengers', {
-            templateUrl: 'avengers.html',
-            controller: 'Avengers',
-            controllerAs: 'vm'
-        });
-}
+    function config($stateProvider, $urlRouterProvider) {
+        // For any unmatched url, redirect to /overview
+        $urlRouterProvider.otherwise("/overview");
+
+        $stateProvider
+            .state('overview', {
+                url: "/overview",
+                templateUrl: 'app/components/overview/overviewView.html',
+                controller: 'OverviewController',
+                controllerAs: 'vm'
+            });
+    }
+})();

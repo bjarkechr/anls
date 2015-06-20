@@ -1,3 +1,6 @@
-'use strict';
-angular
-    .module('anlsApp', ['ui.router']);
+(function () {
+    'use strict';
+    angular
+        .module('anlsApp', ['ui.router']);
+
+})();
