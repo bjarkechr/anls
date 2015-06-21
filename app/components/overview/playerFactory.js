@@ -6,7 +6,7 @@
         .factory('playerFactory', playerFactory);
 
     function playerFactory($resource) {
-        return $resource('http://localhost:8080/players/:playerId');
+        return $resource('http://tor.superhelt.org:8080/players/:playerId');
     }
 
 })();

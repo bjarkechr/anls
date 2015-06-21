@@ -5,16 +5,16 @@
         .module('anlsApp')
         .controller('OverviewController', OverviewController);
 
-    function OverviewController(playerFactory) {
+    function OverviewController(playerFactory, $log) {
         var vm = this;
         
         vm.test = '';
         
         playerFactory.query(null, queryResult);
         
-        function queryResult()
+        function queryResult(data)
         {
-            
+            $log.log(data);
         }
         
         vm.players = [
