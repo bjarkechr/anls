@@ -5,8 +5,17 @@
         .module('anlsApp')
         .controller('OverviewController', OverviewController);
 
-    function OverviewController() {
+    function OverviewController(playerFactory) {
         var vm = this;
+        
+        vm.test = '';
+        
+        playerFactory.query(null, queryResult);
+        
+        function queryResult()
+        {
+            
+        }
         
         vm.players = [
             {name:'Graznak', points:100, activity:80},
