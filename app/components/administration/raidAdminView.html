@@ -1,0 +1,165 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">A Necessary Loot System</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Raid Administration</a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Adminstration <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Administrate Players</a>
+                        </li>
+                        <li><a href="#">Administrate Items</a>
+                        </li>
+                        <li><a href="#">Administrate Instances</a>
+                        </li>
+                        <li><a href="#/raidManagement">Administrate Raids</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Change Settings</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Statistics</a>
+                        </li>
+                        <li><a href="#">View Items</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input type="text" placeholder="Username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</nav>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Raid Administration</h1>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Add Raid</h4>
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="instancename">Instance</label>
+                    <select class="form-control" id="instancename">
+                        <option ng-repeat="instance in vm.instances" value="{{instance.id}}">{{instance.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="starttime">Start</label>
+
+                    <span class="input-group">
+                        <input type="text" class="form-control" datepicker-popup='dd-MMMM-yyyy' ng-model="vm.addRaidStartDate" is-open="vm.datePickerOpened" ng-required="true" starting-day="1" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    <timepicker ng-model="vm.addRaidStartTime"  show-meridian="ismeridian"></timepicker>
+                    </span>
+
+
+                </div>
+                <button type="submit" class="btn btn-success">Add</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <h4>Raids</h4>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Active</h3>
+                </div>
+                <table class="table table-striped table-condensed">
+                    <tr>
+                        <th>Instance</th>
+                        <th>Date and time</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="raid in vm.raids">
+                        <td>{{raid.instance}}</td>
+                        <td>{{raid.start}}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Planned</h3>
+                </div>
+                <table class="table table-striped table-condensed">
+                    <tr>
+                        <th>Instance</th>
+                        <th>Date and time</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="raid in vm.raids">
+                        <td>{{raid.instance}}</td>
+                        <td>{{raid.start}}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Finished</h3>
+                </div>
+                <table class="table table-striped table-condensed">
+                    <tr>
+                        <th>Instance</th>
+                        <th>Date and time</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="raid in vm.raids">
+                        <td>{{raid.instance}}</td>
+                        <td>{{raid.start}}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <hr>
+
+    <footer>
+        <p>&copy; A Necessary Evil 2015</p>
+    </footer>
+</div>
+<!-- /container -->

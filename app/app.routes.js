@@ -14,6 +14,12 @@
                 templateUrl: 'app/components/overview/overviewView.html',
                 controller: 'OverviewController',
                 controllerAs: 'vm'
+            })
+            .state('raidManagement', {
+                url: '/raidManagement',
+                templateUrl: 'app/components/administration/raidAdminView.html',
+                controller: 'RaidAdminController',
+                controllerAs: 'vm'
             });
     }
 })();

@@ -8,19 +8,16 @@
     function OverviewController(playerFactory, $log) {
         var vm = this;
         
-        vm.test = '';
+        vm.players = [];
         
         playerFactory.query(null, queryResult);
         
         function queryResult(data)
         {
-            $log.log(data);
+            vm.players = data;
         }
         
-        vm.players = [
-            {name:'Graznak', points:100, activity:80},
-            {name:'Ziktator', points:80, activity:100}            
-        ];
+        
     }
 
 })();
