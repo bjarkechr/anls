@@ -36,6 +36,7 @@
                     </ul>
                 </li>
             </ul>
+            <!--
             <form class="navbar-form navbar-right">
                 <div class="form-group">
                     <input type="text" placeholder="Username" class="form-control">
@@ -45,6 +46,7 @@
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
             </form>
+-->
         </div>
         <!--/.navbar-collapse -->
     </div>
@@ -53,6 +55,7 @@
 <div class="jumbotron">
     <div class="container">
         <h1>Raid Administration</h1>
+        <p>Add, remove and update ongoing raids.</p>
     </div>
 </div>
 
@@ -61,7 +64,7 @@
     <div class="row">
         <div class="col-md-12">
             <h4>Add Raid</h4>
-            <form class="form-inline">
+            <form class="form-inline" ng-submit="vm.addRaid()">
                 <div class="form-group">
                     <label for="instancename">Instance</label>
                     <select class="form-control" id="instancename">
@@ -71,15 +74,16 @@
                 <div class="form-group">
                     <label for="starttime">Start</label>
 
-                    <span class="input-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" datepicker-popup='dd-MMMM-yyyy' ng-model="vm.addRaidStartDate" is-open="vm.datePickerOpened" ng-required="true" starting-day="1" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="vm.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
-                    <timepicker ng-model="vm.addRaidStartTime"  show-meridian="ismeridian"></timepicker>
-                    </span>
 
-
+                        <select class="form-control" ng-model="vm.startHour" ng-options="hour.text for hour in vm.hours"></select>
+                        <span class="input-group-addon">:</span>
+                        <select class="form-control" ng-model="vm.startMinute" ng-options="minute.text for minute in vm.minutes"></select>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-success">Add</button>
             </form>
@@ -98,7 +102,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.raids">
+                    <tr ng-repeat="raid in vm.activeRaids">
                         <td>{{raid.instance}}</td>
                         <td>{{raid.start}}</td>
                         <td>
@@ -119,7 +123,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.raids">
+                    <tr ng-repeat="raid in vm.plannedRaids">
                         <td>{{raid.instance}}</td>
                         <td>{{raid.start}}</td>
                         <td>
@@ -140,7 +144,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.raids">
+                    <tr ng-repeat="raid in vm.finishedRaids">
                         <td>{{raid.instance}}</td>
                         <td>{{raid.start}}</td>
                         <td>
