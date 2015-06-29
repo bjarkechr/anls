@@ -36,19 +36,7 @@
                     </ul>
                 </li>
             </ul>
-            <!--
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" placeholder="Username" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
-            </form>
--->
         </div>
-        <!--/.navbar-collapse -->
     </div>
 </nav>
 
@@ -63,17 +51,12 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
-            <h4>Add Raid</h4>
+            <h2>Add Raid <small>Create a new raid</small></h2>
+
             <form class="form-inline" ng-submit="vm.addRaid()">
                 <div class="form-group">
                     <label for="instancename">Instance</label>
                     <select class="form-control" id="instancename" ng-model="vm.selectedInstance" ng-options="instance.name for instance in vm.instances"></select>
-                    
-<!--
-                    <select class="form-control" id="instancename">
-                        <option ng-repeat="instance in vm.instances" value="{{instance.id}}">{{instance.name}}</option>
-                    </select>
--->
                 </div>
                 <div class="form-group">
                     <label for="starttime">Start</label>
@@ -94,8 +77,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-7">
-            <h4>Raids</h4>
+        <div class="col-md-12">
+            <h2>Raids <small>Overview of existing raids</small></h2>
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">Active</h3>
@@ -107,10 +90,10 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.activeRaids">
-                        <td>{{raid.instance}}</td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
                         <td>{{raid.start}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteRaid(raid)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                         </td>
                     </tr>
@@ -128,7 +111,7 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.plannedRaids">
-                        <td>{{raid.instance}}</td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
                         <td>{{raid.start}}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -149,7 +132,7 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.finishedRaids">
-                        <td>{{raid.instance}}</td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
                         <td>{{raid.start}}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

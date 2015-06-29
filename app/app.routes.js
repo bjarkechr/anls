@@ -20,6 +20,12 @@
                 templateUrl: 'app/components/administration/raidAdminView.html',
                 controller: 'RaidAdminController',
                 controllerAs: 'vm'
+            })
+            .state('raidDetailManagement', {
+                url: '/raidManagement/{raidId}',
+                templateUrl: 'app/components/administration/raidDetailAdminView.html',
+                controller: 'RaidDetailAdminController',
+                controllerAs: 'vm'
             });
     }
 })();
