@@ -36,15 +36,10 @@
             raidFactory.query(null, raidQueryResult);
 
             function raidQueryResult(data) {
-                $log.log("Raids loaded");
-                
-                $log.log(data);
-                
                 var raids = data;
                 var len = raids.length;
                 for (var i = 0; i < len; i++) {
 
-                    $log.log(raids[i].status);
                     if (raids[i].status == "Planned") {
                         vm.plannedRaids.push(raids[i]);
                     }
@@ -83,8 +78,6 @@
             newRaid.start = dateString;
             newRaid.instance = vm.selectedInstance.name;
 
-            $log.log(newRaid);
-            
             newRaid.$save(onSuccess, onError);
 
             function onSuccess() {
@@ -97,6 +90,8 @@
         }
 
         function deleteRaid(raid) {
+            $log.log(raid);
+            
             raid.$delete(onSuccess, onError);
 
             function onSuccess(value, status) {
@@ -108,7 +103,7 @@
 
             function onError(data, status) {
                 $log.log("Error! ");
-                $log.log(value);
+                $log.log(data);
                 $log.log(status);
             };
         }

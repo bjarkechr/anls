@@ -90,11 +90,10 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.activeRaids">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        </td>
                         <td>{{raid.start}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteRaid(raid)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
                         </td>
                     </tr>
                 </table>
@@ -111,10 +110,11 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.plannedRaids">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        </td>
                         <td>{{raid.start}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteRaid(raid)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
                         </td>
                     </tr>
@@ -132,19 +132,15 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.finishedRaids">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a></td>
+                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        </td>
                         <td>{{raid.start}}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </button>
                         </td>
                     </tr>
                 </table>
             </div>
-
         </div>
-
-
     </div>
 
     <hr>
