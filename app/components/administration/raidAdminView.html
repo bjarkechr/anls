@@ -76,6 +76,15 @@
             </form>
         </div>
     </div>
+    <br>
+
+    <div class="row">
+        <div class="col-md-6">
+            <alert ng-show="vm.addRaidErrorOccured" type="danger" close="vm.addRaidErrorOccured = false"><strong>Error!</strong> A problem has occurred trying to add raid.</alert>
+            <alert ng-show="vm.addRaidSuccess" type="success" close="vm.addRaidSuccess = false"><strong>Success!</strong> Raid added.</alert>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <h2>Raids <small>Overview of existing raids</small></h2>
@@ -89,7 +98,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.activeRaids">
+                    <tr ng-repeat="raid in vm.activeRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.start}}</td>
@@ -109,7 +118,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.plannedRaids">
+                    <tr ng-repeat="raid in vm.plannedRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.start}}</td>
@@ -119,6 +128,11 @@
                         </td>
                     </tr>
                 </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <alert ng-show="vm.deleteRaidErrorOccured" type="danger" close="vm.deleteRaidErrorOccured = false"><strong>Error!</strong> A problem has occurred trying to delete raid.</alert>
+                </div>
             </div>
 
             <div class="panel panel-info">
@@ -131,7 +145,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.finishedRaids">
+                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.start}}</td>

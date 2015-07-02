@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidAdminController', RaidAdminController);
 
-    function RaidAdminController(raidFactory, instanceFactory, $log) {
+    function RaidAdminController(raidFactory, instanceFactory, $log, $window) {
         var vm = this;
 
         // Properties
@@ -22,6 +22,10 @@
         vm.addRaid = addRaid;
         vm.open = openDatePicker;
         vm.deleteRaid = deleteRaid;
+        vm.loadRaids = loadRaids;
+        vm.addRaidErrorOccured = false;
+        vm.addRaidSuccess = false;
+        vm.deleteRaidErrorOccured = false;
 
         // Query Rest services
         loadRaids();
@@ -29,14 +33,15 @@
 
         // Functions
         function loadRaids() {
-            vm.activeRaids = [];
-            vm.plannedRaids = [];
-            vm.finishedRaids = [];
+            vm.activeRaids.length = 0;
+            vm.plannedRaids.length = 0;
+            vm.finishedRaids.length = 0;
 
             raidFactory.query(null, raidQueryResult);
 
             function raidQueryResult(data) {
                 var raids = data;
+
                 var len = raids.length;
                 for (var i = 0; i < len; i++) {
 
@@ -60,6 +65,13 @@
                 vm.instances = data;
 
                 vm.selectedInstance = vm.instances[0];
+
+                // For now hard code Hellfire Citadel as default instance
+                for (var i = 0; i < vm.instances.length; i++) {
+                    if (vm.instances[i].name == "Hellfire Citadel") {
+                        vm.selectedInstance = vm.instances[i];
+                    }
+                }
             }
         }
 
@@ -81,30 +93,31 @@
             newRaid.$save(onSuccess, onError);
 
             function onSuccess() {
-                loadRaids();
+
+                vm.addRaidSuccess = true;
+
+                setTimeout(function () {
+                    loadRaids();
+                }, 1000);
             }
 
             function onError() {
-                $log.log("Error adding raid.")
+                vm.addRaidErrorOccured = true;
             }
         }
 
         function deleteRaid(raid) {
-            $log.log(raid);
-            
-            raid.$delete(onSuccess, onError);
+            raid.$deleteRaid(onSuccess, onError);
 
             function onSuccess(value, status) {
-                $log.log("success! ");
-                $log.log(value);
-                $log.log(status);
+                setTimeout(function () {
+                    loadRaids();
+                }, 1000);
 
             }
 
             function onError(data, status) {
-                $log.log("Error! ");
-                $log.log(data);
-                $log.log(status);
+                vm.deleteRaidErrorOccured = true;
             };
         }
 

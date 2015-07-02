@@ -6,7 +6,13 @@
         .factory('raidFactory', raidFactory);
 
     function raidFactory($resource) {
-        return $resource('http://tor.superhelt.org:\8080/raids/:raidId');
+        return $resource('http://tor.superhelt.org:\8080/raids/:raidId/', {
+            raidId: '@id'
+        }, {
+            'deleteRaid': {
+                method: 'DELETE'
+            }
+        });
     }
 
 })();

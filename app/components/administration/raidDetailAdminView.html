@@ -42,8 +42,8 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1>Raid Detail</h1>
-        <p>Raid details for raid {{vm.raidId}}</p>
+        <h1>Raid Detail <small>{{vm.raidId}}</small></h1>
+        <p>Details for raid on {{vm.instance}}, {{vm.start}}</p>
     </div>
 </div>
 
@@ -51,6 +51,35 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Raids <small>Overview of existing raids</small></h2>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Events</h3>
+                </div>
+                <table class="table table-striped table-condensed">
+                    <tr>
+                        <th>Date</th>
+                        <th>Id</th>
+                        <th>Type</th>
+                        <th>Players</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="event in vm.events | orderBy: 'date'">
+                        <td>{{event.date}}</td>
+                        <td>{{event.id}}</td>
+                        <td>{{event.type}}</td>
+                        <td>{{event.players}}</td>
+                        <td>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 
