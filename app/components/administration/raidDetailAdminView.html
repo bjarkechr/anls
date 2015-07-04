@@ -47,7 +47,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-md-12">
@@ -55,25 +55,97 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <h2>Raids <small>Overview of existing raids</small></h2>
-            <div class="panel panel-success">
+        <div class="col-md-4">
+            <h2>Players <small>Players in raid</small></h2>
+            <div class="row">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Active</h3>
+                    </div>
+                    <table class="table table-striped table-condensed">
+                        <tr>
+                            <th>Name</th>
+                            <th>EP</th>
+                            <th>QP</th>
+                            <th>Total EQ</th>
+                        </tr>
+                        <tr ng-repeat="player in vm.activePlayers | orderBy: 'ep'">
+                            <td>{{player.player}}</td>
+                            <td>{{player.ep}}</td>
+                            <td>{{player.qp}}</td>
+                            <td>{{player.totolEp}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Queued</h3>
+                    </div>
+                    <table class="table table-striped table-condensed">
+                        <tr>
+                            <th>Name</th>
+                            <th>EP</th>
+                            <th>QP</th>
+                            <th>Total EQ</th>
+                        </tr>
+                        <tr ng-repeat="player in vm.queuedPlayers | orderBy: 'ep'">
+                            <td>{{player.player}}</td>
+                            <td>{{player.ep}}</td>
+                            <td>{{player.qp}}</td>
+                            <td>{{player.totolEp}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Afk</h3>
+                    </div>
+                    <table class="table table-striped table-condensed">
+                        <tr>
+                            <th>Name</th>
+                            <th>EP</th>
+                            <th>QP</th>
+                            <th>Total EQ</th>
+                        </tr>
+                        <tr ng-repeat="player in vm.afkPlayers | orderBy: 'ep'">
+                            <td>{{player.player}}</td>
+                            <td>{{player.ep}}</td>
+                            <td>{{player.qp}}</td>
+                            <td>{{player.totolEp}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h2>Events <small>Events occured related to raid</small></h2>
+            <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Events</h3>
                 </div>
                 <table class="table table-striped table-condensed">
                     <tr>
                         <th>Date</th>
-                        <th>Id</th>
                         <th>Type</th>
                         <th>Players</th>
-                        <th></th>
+                        <th>Amount</th>
+                        <th>Comment</th>
+                        <th>Item</th>
                     </tr>
                     <tr ng-repeat="event in vm.events | orderBy: 'date'">
                         <td>{{event.date}}</td>
-                        <td>{{event.id}}</td>
                         <td>{{event.type}}</td>
                         <td>{{event.players}}</td>
+                        <td>{{event.amount}}</td>
+                        <td>{{event.comment}}</td>
+                        <td>{{event.itemName}}</td>
                         <td>
                         </td>
                     </tr>
