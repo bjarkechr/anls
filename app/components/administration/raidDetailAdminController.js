@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidDetailAdminController', RaidDetailAdminController);
 
-    function RaidDetailAdminController($log, $stateParams, raidFactory, eventFactory, itemFactory, playerPointsFactory) {
+    function RaidDetailAdminController($log, $stateParams, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
@@ -20,6 +20,10 @@
         vm.inactivePlayers = [];
         vm.isInactivePlayersCollapsed = true;
 
+        $log.log();
+
+        vm.addPlayerToRaid = addPlayerToRaid;
+
         loadItems();
 
         // Functions
@@ -32,20 +36,6 @@
                 vm.items = data;
 
                 loadRaid();
-            }
-        }
-
-        function loadPlayerPoints(activatePlayerPoints) {
-            vm.inactivePlayers.length = 0;
-
-            playerPointsFactory.query(null, onPlayersLoaded);
-
-            function onPlayersLoaded(data) {
-                var playerLength = data.length;
-
-                for (var i = 0; i < playerLength; i++) {
-                    // Find players in all points not in active points and add these to vm.inactivePlayers
-                }
             }
         }
 
@@ -63,12 +53,13 @@
             function onRaidLoaded(raid) {
                 vm.instance = raid.instance;
                 vm.start = raid.start;
+                vm.status = raid.status;
 
                 getEvents(raid.events);
 
                 updatePlayerArrays(raid.points, raid.afk, raid.queue);
 
-                loadPlayerPoints(raid.points);
+                updateInactivePlayers(raid.points);
             }
 
             function getEvents(events) {
@@ -126,6 +117,45 @@
                     }
                     return rv;
                 }
+            }
+
+            function updateInactivePlayers(activePlayerPoints) {
+                vm.inactivePlayers.length = 0;
+
+                playerPointsFactory.query(null, onPlayersLoaded);
+
+                function onPlayersLoaded(allPlayerPoints) {
+                    var len = allPlayerPoints.length;
+
+                    for (var i = 0; i < len; i++) {
+                        // Use a filter to figure out whether this player exists in array of active players or not.
+                        var filterArr = filterFilter(activePlayerPoints, {
+                            player: allPlayerPoints[i].player
+                        });
+
+                        // if filterArr contains any elements then it is because we have a match in active players
+                        // and this player should _not_ be included in list of inactive players.
+                        if (filterArr.length == 0) {
+                            vm.inactivePlayers.push(allPlayerPoints[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        function addPlayerToRaid(player) {
+            var event = new eventFactory();
+            event.type = "Add";
+            event.players = [player.player];
+            event.date = dataFormatService.dateToString(new Date());
+            var promise = event.$save({
+                raidId: vm.raidId
+            });
+            
+            promise.catch(onError);
+            
+            function onError(reason){
+                $log.log("Add player failed. Reason: " + reason);
             }
         }
     }
