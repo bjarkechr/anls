@@ -51,98 +51,24 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="col-lg-12">
+            <alert ng-show="vm.errorOccured" type="danger" close="vm.errorOccured = false"><strong>Error!</strong> {{vm.errorMsg}}</alert>
         </div>
     </div>
 
     <div class="row">
+        <!-- Players -->
         <div class="col-lg-4">
             <div class="row">
-                <h2>Players <small>Players in raid</small></h2>
-            </div>
-            <div class="row">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Active <span class="badge">{{vm.activePlayers.length}}</span></h3>
-                    </div>
-                    <table class="table table-striped table-condensed">
-                        <tr>
-                            <th>Name</th>
-                            <th>EP</th>
-                            <th>QP</th>
-                            <th>Total EQ</th>
-                            <th></th>
-                        </tr>
-                        <tr ng-repeat="player in vm.activePlayers | orderBy: 'ep'">
-                            <td>{{player.player}}</td>
-                            <td>{{player.ep}}</td>
-                            <td>{{player.qp}}</td>
-                            <td>{{player.totolEp}}</td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="...">
-                                    <button type="button" class="btn btn-default">Left</button>
-                                    <button type="button" class="btn btn-default">Middle</button>
-                                    <button type="button" class="btn btn-default">Right</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                <div class="col-lg-12">
+                    <h2>Players <small>Players in raid</small></h2>
                 </div>
             </div>
-
             <div class="row">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Queued <span class="badge">{{vm.queuedPlayers.length}}</span></h3>
-                    </div>
-                    <table class="table table-striped table-condensed">
-                        <tr>
-                            <th>Name</th>
-                            <th>EP</th>
-                            <th>QP</th>
-                            <th>Total EQ</th>
-                        </tr>
-                        <tr ng-repeat="player in vm.queuedPlayers | orderBy: 'ep'">
-                            <td>{{player.player}}</td>
-                            <td>{{player.ep}}</td>
-                            <td>{{player.qp}}</td>
-                            <td>{{player.totolEp}}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Afk  <span class="badge">{{vm.afkPlayers.length}}</span></h3>
-                    </div>
-                    <table class="table table-striped table-condensed">
-                        <tr>
-                            <th>Name</th>
-                            <th>EP</th>
-                            <th>QP</th>
-                            <th>Total EQ</th>
-                        </tr>
-                        <tr ng-repeat="player in vm.afkPlayers | orderBy: 'ep'">
-                            <td>{{player.player}}</td>
-                            <td>{{player.ep}}</td>
-                            <td>{{player.qp}}</td>
-                            <td>{{player.totolEp}}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row">
-                <h2>Inactive players <small>Players not in raid</small> <button class="btn btn-xs" type="button" ng-click='vm.isInactivePlayersCollapsed = !vm.isInactivePlayersCollapsed'>
-                    <span class="glyphicon glyphicon-collapse-down" ng-show="vm.isInactivePlayersCollapsed"></span>
-                    <span class="glyphicon glyphicon-collapse-up" ng-show="!vm.isInactivePlayersCollapsed"></span>
-                    </button></h2>
-            </div>
-
-            <div class="row">
-                <div collapse='vm.isInactivePlayersCollapsed'>
-                    <div class="panel panel-warning">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Active <span class="badge">{{vm.activePlayers.length}}</span></h3>
+                        </div>
                         <table class="table table-striped table-condensed">
                             <tr>
                                 <th>Name</th>
@@ -151,47 +77,166 @@
                                 <th>Total EQ</th>
                                 <th></th>
                             </tr>
-                            <tr ng-repeat="player in vm.inactivePlayers | orderBy: 'ep'">
+                            <tr ng-repeat="player in vm.activePlayers | orderBy: 'ep'">
                                 <td>{{player.player}}</td>
                                 <td>{{player.ep}}</td>
                                 <td>{{player.qp}}</td>
                                 <td>{{player.totolEp}}</td>
-                                <td><button class="btn btn-xs btn-success" type="button" ng-click="vm.addPlayerToRaid(player)"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-success btn-xs" popover-template="'playerLootTemplate'" popover-title="Assign Loot to {{player.player}}" popover-append-to-body="true">Loot</button>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="vm.afkPlayer(player.player)">Afk</button>
+                                        <button type="button" class="btn btn-info btn-xs" ng-click="vm.queuePlayer(player.player)">Queue</button>
+                                    </div>
+                                </td>
                             </tr>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-8">
-            <h2>Events <small>Events occured related to raid</small></h2>
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Events</h3>
+            <script type="text/ng-template" id="playerLootTemplate">
+
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="buyType" class="col-sm-2 control-label">Buy Type</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="buyType" ng-model="vm.selectedInstance" ng-options="instance.name for instance in vm.instances"></select>
+                        </div>
+
+                    </div>
+                </form>
+
+                <!--                http://tor.superhelt.org:8080/types/buytypes-->
+
+            </script>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Queued <span class="badge">{{vm.queuedPlayers.length}}</span></h3>
+                        </div>
+                        <table class="table table-striped table-condensed">
+                            <tr>
+                                <th>Name</th>
+                                <th>EP</th>
+                                <th>QP</th>
+                                <th>Total EQ</th>
+                            </tr>
+                            <tr ng-repeat="player in vm.queuedPlayers | orderBy: 'ep'">
+                                <td>{{player.player}}</td>
+                                <td>{{player.ep}}</td>
+                                <td>{{player.qp}}</td>
+                                <td>{{player.totolEp}}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <table class="table table-striped table-condensed">
-                    <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Players</th>
-                        <th>Amount</th>
-                        <th>Comment</th>
-                        <th>Item</th>
-                    </tr>
-                    <tr ng-repeat="event in vm.events | orderBy: 'date'">
-                        <td>{{event.date}}</td>
-                        <td>{{event.type}}</td>
-                        <td>{{event.players}}</td>
-                        <td>{{event.amount}}</td>
-                        <td>{{event.comment}}</td>
-                        <td>{{event.itemName}}</td>
-                        <td>
-                        </td>
-                    </tr>
-                </table>
             </div>
 
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Afk  <span class="badge">{{vm.afkPlayers.length}}</span></h3>
+                        </div>
+                        <table class="table table-striped table-condensed">
+                            <tr>
+                                <th>Name</th>
+                                <th>EP</th>
+                                <th>QP</th>
+                                <th>Total EQ</th>
+                            </tr>
+                            <tr ng-repeat="player in vm.afkPlayers | orderBy: 'ep'">
+                                <td>{{player.player}}</td>
+                                <td>{{player.ep}}</td>
+                                <td>{{player.qp}}</td>
+                                <td>{{player.totolEp}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Inactive players <small>Players not in raid</small> <button class="btn btn-xs" type="button" ng-click='vm.isInactivePlayersCollapsed = !vm.isInactivePlayersCollapsed'>
+                    <span class="glyphicon glyphicon-collapse-down" ng-show="vm.isInactivePlayersCollapsed"></span>
+                    <span class="glyphicon glyphicon-collapse-up" ng-show="!vm.isInactivePlayersCollapsed"></span>
+                    </button></h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div collapse='vm.isInactivePlayersCollapsed'>
+                        <div class="panel panel-warning">
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>EP</th>
+                                    <th>QP</th>
+                                    <th>Total EQ</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="player in vm.inactivePlayers | orderBy: 'ep'">
+                                    <td>{{player.player}}</td>
+                                    <td>{{player.ep}}</td>
+                                    <td>{{player.qp}}</td>
+                                    <td>{{player.totolEp}}</td>
+                                    <td>
+                                        <button class="btn btn-xs btn-success" type="button" ng-click="vm.addPlayerToRaid(player)"><span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events -->
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Events <small>Events occured related to raid</small></h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Events</h3>
+                        </div>
+                        <table class="table table-striped table-condensed">
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Players</th>
+                                <th>Amount</th>
+                                <th>Comment</th>
+                                <th>Item</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="event in vm.events | orderBy: 'date'">
+                                <td>{{event.date}}</td>
+                                <td>{{event.type}}</td>
+                                <td>{{event.players}}</td>
+                                <td>{{event.amount}}</td>
+                                <td>{{event.comment}}</td>
+                                <td>{{event.itemName}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteEvent(event)"><span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

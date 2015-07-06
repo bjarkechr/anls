@@ -12,6 +12,8 @@
         vm.instance = "";
         vm.start = "";
         vm.status = "";
+        vm.errorOccured = false;
+        vm.errorMsg = "";
         vm.items = [];
         vm.events = [];
         vm.activePlayers = [];
@@ -19,10 +21,11 @@
         vm.queuedPlayers = [];
         vm.inactivePlayers = [];
         vm.isInactivePlayersCollapsed = true;
-
-        $log.log();
-
         vm.addPlayerToRaid = addPlayerToRaid;
+        vm.deleteEvent = deleteEvent;
+        vm.afkPlayer = afkPlayer;
+        vm.queuePlayer = queuePlayer;
+
 
         loadItems();
 
@@ -143,19 +146,85 @@
             }
         }
 
+        function deleteEvent(event) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
+            eventFactory.deleteEvent({
+                    raidId: vm.raidId,
+                    eventId: event.id
+                }, onSuccess,
+                onError);
+
+            function onSuccess() {
+                setTimeout(function () {
+                    loadRaid();
+                }, 1000);
+            }
+
+            function onError(reason) {
+                vm.errorOccured = true;
+                vm.errorMsg = "Error occured while deleting event.<br> " + reason;
+            }
+        }
+
         function addPlayerToRaid(player) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
+            createAndSendEvent("Add", player.player, null, onError);
+
+            function onError(reason) {
+                vm.errorOccured = true;
+                vm.errorMsg = "Error occured while adding player to raid: " + reason.data;
+            }
+        }
+
+        function afkPlayer(playername) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
+            createAndSendEvent("AFK", playername, null, onError);
+
+            function onError(reason) {
+                vm.errorOccured = true;
+                vm.errorMsg = "Error occured while setting player AFK: " + reason.data;
+            }
+        }
+
+        function queuePlayer(playername) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
+            createAndSendEvent("Queue", playername, null, onError);
+
+            function onError(reason) {
+                vm.errorOccured = true;
+                vm.errorMsg = "Error occured while queuing player: " + reason.data;
+            }
+        }
+
+        function createAndSendEvent(type, playername, modifyEventCallback, onError) {
             var event = new eventFactory();
-            event.type = "Add";
-            event.players = [player.player];
+            event.type = type;
+            event.players = [playername];
             event.date = dataFormatService.dateToString(new Date());
+
+            if (modifyEventCallback != null) {
+                modifyEventCallback(event);
+            }
+
             var promise = event.$save({
                 raidId: vm.raidId
             });
-            
-            promise.catch(onError);
-            
-            function onError(reason){
-                $log.log("Add player failed. Reason: " + reason);
+
+            promise.then(onSuccess,
+                onError);
+
+            function onSuccess() {
+                setTimeout(function () {
+                    loadRaid();
+                }, 1000);
             }
         }
     }
