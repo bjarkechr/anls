@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidDetailAdminController', RaidDetailAdminController);
 
-    function RaidDetailAdminController($log, $stateParams, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService) {
+    function RaidDetailAdminController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
@@ -25,11 +25,29 @@
         vm.deleteEvent = deleteEvent;
         vm.afkPlayer = afkPlayer;
         vm.queuePlayer = queuePlayer;
+        vm.openAddLootModal = openAddLootModal;
 
 
         loadItems();
 
         // Functions
+
+        function openAddLootModal() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'app/components/administration/raidDetailAdminAddLootView.html',
+                controller: 'RaidDetailAdminAddLootController as vm',                
+                size: 'lg',
+            });
+
+            modalInstance.result.then(function () {
+
+                },
+                function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+        }
+
 
         function loadItems() {
             vm.items.length = 0;

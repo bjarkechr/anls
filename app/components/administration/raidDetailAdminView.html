@@ -84,7 +84,7 @@
                                 <td>{{player.totolEp}}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-success btn-xs" popover-template="'playerLootTemplate'" popover-title="Assign Loot to {{player.player}}" popover-append-to-body="true">Loot</button>
+                                        <button type="button" class="btn btn-success btn-xs" ng-click="vm.openAddLootModal()">Loot</button>
                                         <button type="button" class="btn btn-danger btn-xs" ng-click="vm.afkPlayer(player.player)">Afk</button>
                                         <button type="button" class="btn btn-info btn-xs" ng-click="vm.queuePlayer(player.player)">Queue</button>
                                     </div>
@@ -94,22 +94,6 @@
                     </div>
                 </div>
             </div>
-
-            <script type="text/ng-template" id="playerLootTemplate">
-
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="buyType" class="col-sm-2 control-label">Buy Type</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" id="buyType" ng-model="vm.selectedInstance" ng-options="instance.name for instance in vm.instances"></select>
-                        </div>
-
-                    </div>
-                </form>
-
-                <!--                http://tor.superhelt.org:8080/types/buytypes-->
-
-            </script>
 
             <div class="row">
                 <div class="col-lg-12">
