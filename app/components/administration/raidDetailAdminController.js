@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidDetailAdminController', RaidDetailAdminController);
 
-    function RaidDetailAdminController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService) {
+    function RaidDetailAdminController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
@@ -20,34 +20,54 @@
         vm.afkPlayers = [];
         vm.queuedPlayers = [];
         vm.inactivePlayers = [];
+        vm.buyTypes = [];
         vm.isInactivePlayersCollapsed = true;
         vm.addPlayerToRaid = addPlayerToRaid;
         vm.deleteEvent = deleteEvent;
         vm.afkPlayer = afkPlayer;
         vm.queuePlayer = queuePlayer;
+        vm.returnAfkPlayer = returnAfkPlayer;
+        vm.returnQueuePlayer = returnQueuePlayer;
         vm.openAddLootModal = openAddLootModal;
-
+        vm.startRaid = startRaid;
+        vm.finishRaid = finishRaid;
+        vm.isStartRaidPossible = false;
+        vm.isFinishRaidPossible = false;
 
         loadItems();
+        loadBuyTypes();
 
         // Functions
 
-        function openAddLootModal() {
+        function openAddLootModal(player) {
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'app/components/administration/raidDetailAdminAddLootView.html',
-                controller: 'RaidDetailAdminAddLootController as vm',                
+                controller: 'RaidDetailAdminAddLootController as vm',
                 size: 'lg',
+                resolve: {
+                    players: function () {
+                        return vm.activePlayers;
+                    },
+                    items: function () {
+                        return vm.items;
+                    },
+                    selectedPlayer: function () {
+                        return player;
+                    },
+                    buyTypes: function () {
+                        return vm.buyTypes;
+                    }
+                }
             });
 
-            modalInstance.result.then(function () {
-
+            modalInstance.result.then(function (loot) {
+                    addLootToPlayer(loot);
                 },
                 function () {
                     $log.info('Modal dismissed at: ' + new Date());
                 });
         }
-
 
         function loadItems() {
             vm.items.length = 0;
@@ -75,6 +95,9 @@
                 vm.instance = raid.instance;
                 vm.start = raid.start;
                 vm.status = raid.status;
+
+                vm.isStartRaidPossible = vm.status == "Planned";
+                vm.isFinishRaidPossible = vm.status == "Active";
 
                 getEvents(raid.events);
 
@@ -164,6 +187,16 @@
             }
         }
 
+        function loadBuyTypes() {
+            vm.buyTypes.length = 0;
+
+            buytypeFactory.query(null, onLoaded);
+
+            function onLoaded(data) {
+                vm.buyTypes = data;
+            }
+        }
+
         function deleteEvent(event) {
             vm.errorOccured = false;
             vm.errorMsg = "";
@@ -186,46 +219,61 @@
             }
         }
 
-        function addPlayerToRaid(player) {
-            vm.errorOccured = false;
-            vm.errorMsg = "";
+        function startRaid() {
+            createAndSendEvent("Start", null, modifyEvent, "Error occured while starting raid.");
 
-            createAndSendEvent("Add", player.player, null, onError);
-
-            function onError(reason) {
-                vm.errorOccured = true;
-                vm.errorMsg = "Error occured while adding player to raid: " + reason.data;
+            function modifyEvent(event) {
+                event.amount = 10;
             }
+        }
+
+        function finishRaid() {
+            createAndSendEvent("Finish", null, null, "Error occured while finishing raid.");
+        }
+
+        function addPlayerToRaid(player) {
+            createAndSendEvent("Add", player.player, null, "Error occured while adding player to raid.");
         }
 
         function afkPlayer(playername) {
-            vm.errorOccured = false;
-            vm.errorMsg = "";
+            createAndSendEvent("AFK", playername, null, "Error occured while setting player AFK.");
+        }
 
-            createAndSendEvent("AFK", playername, null, onError);
-
-            function onError(reason) {
-                vm.errorOccured = true;
-                vm.errorMsg = "Error occured while setting player AFK: " + reason.data;
-            }
+        function returnAfkPlayer(playername) {
+            createAndSendEvent("ReturnAFK", playername, null, "Error occured while returning player from afk.");
         }
 
         function queuePlayer(playername) {
-            vm.errorOccured = false;
-            vm.errorMsg = "";
+            createAndSendEvent("Queue", playername, null, "Error occured while queuing player.");
+        }
 
-            createAndSendEvent("Queue", playername, null, onError);
+        function returnQueuePlayer(playername) {
+            createAndSendEvent("ReturnQueue", playername, null, "Error occured while returning player from queue.");
+        }
 
-            function onError(reason) {
-                vm.errorOccured = true;
-                vm.errorMsg = "Error occured while queuing player: " + reason.data;
+        function addLootToPlayer(loot) {
+            createAndSendEvent("Buy", loot.player.player, modifyEvent, "Error occured while adding item to player.");
+
+            function modifyEvent(event) {
+                event.buyType = loot.buyType;
+                event.item = loot.item.id;
+                event.itemQuality = loot.itemQuality;
+
+                if (loot.comment != null) {
+                    event.comment = loot.comment;
+                }
             }
         }
 
-        function createAndSendEvent(type, playername, modifyEventCallback, onError) {
+        function createAndSendEvent(type, playername, modifyEventCallback, errorMsg) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
             var event = new eventFactory();
             event.type = type;
-            event.players = [playername];
+            if (playername != null) {
+                event.players = [playername];
+            }
             event.date = dataFormatService.dateToString(new Date());
 
             if (modifyEventCallback != null) {
@@ -243,6 +291,11 @@
                 setTimeout(function () {
                     loadRaid();
                 }, 1000);
+            }
+
+            function onError(reason) {
+                vm.errorOccured = true;
+                vm.errorMsg = errorMsg + ". Reason: " + reason.data;
             }
         }
     }

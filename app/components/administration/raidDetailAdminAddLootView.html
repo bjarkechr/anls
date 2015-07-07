@@ -1,11 +1,41 @@
 <div class="modal-header">
-    <h3 class="modal-title">I'm a modal!</h3>
+    <h3 class="modal-title">Add Loot to {{vm.selectedPlayer.player}}</h3>
 </div>
 <div class="modal-body">
-    MY BODY!
-    {{vm.greeting}}
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="item" class="col-sm-2 control-label">Item</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="vm.selectedItem" typeahead="item as item.name for item in vm.items | filter:{name: $viewValue} | limitTo:15" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="buyType" class="col-sm-2 control-label">Buy Type</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="buyType" ng-model="vm.selectedBuyType" ng-options="buytype for buytype in vm.buyTypes"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="itemQuality" class="col-sm-2 control-label">Item Quality</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="itemQuality" ng-model="vm.selectedItemQuality" ng-options="itemquality for itemquality in vm.itemQualities"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="comment" class="col-sm-2 control-label">Comment</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="comment" ng-model="vm.comment" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="player" class="col-sm-2 control-label">Player</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="player" ng-model="vm.selectedPlayer" ng-options="player.player for player in vm.players"></select>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="vm.ok()">OK</button>
+    <button class="btn btn-primary" ng-click="vm.ok()">Add</button>
     <button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
 </div>

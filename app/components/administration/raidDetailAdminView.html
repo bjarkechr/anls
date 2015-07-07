@@ -42,8 +42,10 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1>Raid Detail <small>{{vm.instance}}, {{vm.start}}</small></h1>
-        <p>Administrate raid.</p>
+        <h1>Raid Detail <small>{{vm.status}}</small></h1>
+        <p>Manage raid on {{vm.instance}}, {{vm.start}} </p>
+        <button type="button" class="btn btn-success btn-lg" ng-click="vm.startRaid()" ng-hide="!vm.isStartRaidPossible">Start</button>
+        <button type="button" class="btn btn-success btn-lg" ng-click="vm.finishRaid()" ng-hide="!vm.isFinishRaidPossible">Finish</button>
     </div>
 </div>
 
@@ -74,17 +76,17 @@
                                 <th>Name</th>
                                 <th>EP</th>
                                 <th>QP</th>
-                                <th>Total EQ</th>
+                                <th>Total EP</th>
                                 <th></th>
                             </tr>
-                            <tr ng-repeat="player in vm.activePlayers | orderBy: 'ep'">
+                            <tr ng-repeat="player in vm.activePlayers | orderBy: '-ep'">
                                 <td>{{player.player}}</td>
                                 <td>{{player.ep}}</td>
                                 <td>{{player.qp}}</td>
                                 <td>{{player.totolEp}}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-success btn-xs" ng-click="vm.openAddLootModal()">Loot</button>
+                                        <button type="button" class="btn btn-success btn-xs" ng-click="vm.openAddLootModal(player)">Loot</button>
                                         <button type="button" class="btn btn-danger btn-xs" ng-click="vm.afkPlayer(player.player)">Afk</button>
                                         <button type="button" class="btn btn-info btn-xs" ng-click="vm.queuePlayer(player.player)">Queue</button>
                                     </div>
@@ -106,13 +108,17 @@
                                 <th>Name</th>
                                 <th>EP</th>
                                 <th>QP</th>
-                                <th>Total EQ</th>
+                                <th>Total EP</th>
+                                <th></th>
                             </tr>
-                            <tr ng-repeat="player in vm.queuedPlayers | orderBy: 'ep'">
+                            <tr ng-repeat="player in vm.queuedPlayers | orderBy: '-ep'">
                                 <td>{{player.player}}</td>
                                 <td>{{player.ep}}</td>
                                 <td>{{player.qp}}</td>
                                 <td>{{player.totolEp}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.returnQueuePlayer(player.player)">Return</button>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -130,13 +136,17 @@
                                 <th>Name</th>
                                 <th>EP</th>
                                 <th>QP</th>
-                                <th>Total EQ</th>
+                                <th>Total EP</th>
+                                <th></th>
                             </tr>
-                            <tr ng-repeat="player in vm.afkPlayers | orderBy: 'ep'">
+                            <tr ng-repeat="player in vm.afkPlayers | orderBy: '-ep'">
                                 <td>{{player.player}}</td>
                                 <td>{{player.ep}}</td>
                                 <td>{{player.qp}}</td>
                                 <td>{{player.totolEp}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.returnAfkPlayer(player.player)">Return</button>
+                                </td>
                             </tr>
                         </table>
                     </div>
