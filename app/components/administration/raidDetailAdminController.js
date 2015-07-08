@@ -33,6 +33,7 @@
         vm.finishRaid = finishRaid;
         vm.isStartRaidPossible = false;
         vm.isFinishRaidPossible = false;
+        vm.enableEventEdit = false;
 
         loadItems();
         loadBuyTypes();
