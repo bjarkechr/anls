@@ -43,7 +43,7 @@
 <div class="jumbotron">
     <div class="container">
         <h1>Raid Detail <small>{{vm.status}}</small></h1>
-        <p>Manage raid on {{vm.instance}}, {{vm.start}} </p>
+        <p>Manage raid on {{vm.instance}}, {{vm.startDisplayDateStr}} </p>
         <button type="button" class="btn btn-success btn-lg" ng-click="vm.startRaid()" ng-hide="!vm.isStartRaidPossible">Start</button>
         <button type="button" class="btn btn-success btn-lg" ng-click="vm.finishRaid()" ng-hide="!vm.isFinishRaidPossible">Finish</button>
     </div>
@@ -225,8 +225,8 @@
                                 <th></th>
                             </tr>
                             <tr ng-repeat="event in vm.events | orderBy: 'date'">
-                                <td>{{event.date}}
-                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.deleteEvent(event)" ng-hide="!vm.enableEventEdit"><span class="glyphicon glyphicon-time"></span>
+                                <td>{{event.displayDate}}
+                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.openSetNewEventTimestampModal(event)" ng-hide="!vm.enableEventEdit"><span class="glyphicon glyphicon-time"></span>
                                     </button>
                                 </td>
                                 <td>{{event.type}}</td>

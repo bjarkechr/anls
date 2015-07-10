@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidAdminController', RaidAdminController);
 
-    function RaidAdminController(raidFactory, instanceFactory, $log, $window) {
+    function RaidAdminController(raidFactory, instanceFactory, $log, $window, dataFormatService) {
         var vm = this;
 
         // Properties
@@ -15,17 +15,18 @@
         vm.instances = [];
         vm.selectedInstance;
         vm.addRaidStartDate = new Date();
-        vm.hours = generateHourMinuteArray(24);
-        vm.minutes = generateHourMinuteArray(60);
+        vm.hours = dataFormatService.generateHourMinuteArray(24);
+        vm.minutes = dataFormatService.generateHourMinuteArray(60);
         vm.startHour = vm.hours[20];
         vm.startMinute = vm.minutes[0];
         vm.addRaid = addRaid;
-        vm.open = openDatePicker;
+        vm.openDatePicker = openDatePicker;
         vm.deleteRaid = deleteRaid;
         vm.loadRaids = loadRaids;
         vm.addRaidErrorOccured = false;
         vm.addRaidSuccess = false;
         vm.deleteRaidErrorOccured = false;
+        vm.datePickerOpened = false;
 
         // Query Rest services
         loadRaids();
@@ -44,6 +45,8 @@
 
                 var len = raids.length;
                 for (var i = 0; i < len; i++) {
+
+                    raids[i].startDisplayDateStr = dataFormatService.dateToDisplayString(dataFormatService.stringToDate(raids[i].start));
 
                     if (raids[i].status == "Planned") {
                         vm.plannedRaids.push(raids[i]);
@@ -79,15 +82,11 @@
 
             var newRaid = new raidFactory();
 
-            var day = vm.addRaidStartDate.getDate();
-            day = (day < 10) ? '0' + day.toString() : day.toString();
-            var month = vm.addRaidStartDate.getMonth() + 1;
-            month = (month < 10) ? '0' + month.toString() : month.toString();
+            var startDate = vm.addRaidStartDate;
+            startDate.setHours(parseInt(vm.startHour), parseInt(vm.startMinute), 0);
 
-            var dateString = vm.addRaidStartDate.getFullYear() + "-" + month + "-" + day;
-            dateString = dateString + " " + vm.startHour + ":" + vm.startMinute + ":00";
+            newRaid.start = dataFormatService.dateToString(startDate);
 
-            newRaid.start = dateString;
             newRaid.instance = vm.selectedInstance.name;
 
             newRaid.$save(onSuccess, onError);
@@ -126,16 +125,6 @@
             $event.stopPropagation();
             vm.datePickerOpened = true;
         };
-
-        function generateHourMinuteArray(max) {
-            var result = [];
-            for (var i = 0; i < max; i++) {
-                result.push(
-                    (i < 10) ? '0' + i.toString() : i.toString()
-                );
-            }
-            return result;
-        }
     }
 
 })();

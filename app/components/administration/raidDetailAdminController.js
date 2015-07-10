@@ -10,7 +10,8 @@
 
         vm.raidId = $stateParams.raidId;
         vm.instance = "";
-        vm.start = "";
+        vm.startDate;
+        vm.startDisplayDateStr;
         vm.status = "";
         vm.errorOccured = false;
         vm.errorMsg = "";
@@ -34,6 +35,7 @@
         vm.isStartRaidPossible = false;
         vm.isFinishRaidPossible = false;
         vm.enableEventEdit = false;
+        vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
 
         loadItems();
         loadBuyTypes();
@@ -70,6 +72,26 @@
                 });
         }
 
+        function openSetNewEventTimestampModal(event) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'app/components/administration/setNewEventTimestampModelView.html',
+                controller: 'SetNewEventTimestampModelController as vm',
+                resolve: {
+                    eventDate: function () {
+                        return event.parsedDate;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (eventDate) {
+                    modifyEvent(event, eventDate);
+                },
+                function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+        }
+
         function loadItems() {
             vm.items.length = 0;
             itemFactory.query(null, onItemsLoaded);
@@ -94,7 +116,10 @@
 
             function onRaidLoaded(raid) {
                 vm.instance = raid.instance;
-                vm.start = raid.start;
+
+                vm.startDate = dataFormatService.stringToDate(raid.start);
+                vm.startDisplayDateStr = dataFormatService.dateToDisplayString(vm.startDate);
+
                 vm.status = raid.status;
 
                 vm.isStartRaidPossible = vm.status == "Planned";
@@ -110,7 +135,12 @@
             function getEvents(events) {
                 var eventLength = events.length;
                 for (var i = 0; i < eventLength; i++) {
+
                     vm.events.push(events[i]);
+
+                    // Convert event.date string to javascript date object and save this as a property.
+                    vm.events[i].parsedDate = dataFormatService.stringToDate(vm.events[i].date);
+                    vm.events[i].displayDate = dataFormatService.dateToDisplayString(vm.events[i].parsedDate);
 
                     if (vm.events[i].type == "Buy") {
                         var item = getItemById(vm.events[i].item);
@@ -298,6 +328,51 @@
                 vm.errorOccured = true;
                 vm.errorMsg = errorMsg + ". Reason: " + reason.data;
             }
+        }
+
+        function modifyEvent(event, eventDate) {
+            vm.errorOccured = false;
+            vm.errorMsg = "";
+
+            event.date = dataFormatService.dateToString(eventDate);
+
+            $log.log(event);
+
+
+
+            eventFactory.get({
+                raidId: vm.raidId,
+                eventId: event.id
+            }, onGetSuccess, onGetError);
+
+
+
+            function onGetSuccess(eventFac) {
+                $log.log(eventFac);
+            }
+
+            function onGetError(reason) {
+                $log.log(reason);
+            }
+
+            //            var promise = event.$save({
+            //                raidId: vm.raidId,
+            //                eventId: event.id
+            //            });
+            //
+            //            promise.then(onSuccess,
+            //                onError);
+            //
+            //            function onSuccess() {
+            //                setTimeout(function () {
+            //                    loadRaid();
+            //                }, 1000);
+            //            }
+            //
+            //            function onError(reason) {
+            //                vm.errorOccured = true;
+            //                vm.errorMsg = "Error modifying event. Reason: " + reason.data;
+            //            }
         }
     }
 

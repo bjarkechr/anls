@@ -64,7 +64,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" datepicker-popup='dd-MMMM-yyyy' ng-model="vm.addRaidStartDate" is-open="vm.datePickerOpened" ng-required="true" starting-day="1" />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="vm.open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                            <button type="button" class="btn btn-default" ng-click="vm.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
 
                         <select class="form-control" ng-model="vm.startHour" ng-options="hour for hour in vm.hours"></select>
@@ -101,7 +101,7 @@
                     <tr ng-repeat="raid in vm.activeRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
-                        <td>{{raid.start}}</td>
+                        <td>{{raid.startDisplayDateStr}}</td>
                         <td>
                         </td>
                     </tr>
@@ -121,7 +121,7 @@
                     <tr ng-repeat="raid in vm.plannedRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
-                        <td>{{raid.start}}</td>
+                        <td>{{raid.startDisplayDateStr}}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteRaid(raid)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </button>
@@ -148,7 +148,7 @@
                     <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'">
                         <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
                         </td>
-                        <td>{{raid.start}}</td>
+                        <td>{{raid.startDisplayDateStr}}</td>
                         <td>
                         </td>
                     </tr>

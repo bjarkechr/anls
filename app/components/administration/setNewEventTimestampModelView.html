@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3 class="modal-title">Change Event Date</h3>
+</div>
+<div class="modal-body">
+    <form class="form-inline">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" datepicker-popup='yyyy-mm-dd' ng-model="vm.eventDate" ng-change="vm.onDateFieldChanged()" is-open="vm.datePickerOpened" ng-required="true" starting-day="1" />
+                <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                <span>
+                <select class="form-control" ng-model="vm.hour" ng-options="hour for hour in vm.hours" ng-change="vm.onDateFieldChanged()"></select>
+                
+                <select class="form-control" ng-model="vm.minute" ng-options="minute for minute in vm.minutes" ng-change="vm.onDateFieldChanged()"></select>
+                
+                <select class="form-control" ng-model="vm.second" ng-options="second for second in vm.seconds" ng-change="vm.onDateFieldChanged()"></select>
+    </span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="vm.ok()">Update</button>
+    <button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
+</div>
