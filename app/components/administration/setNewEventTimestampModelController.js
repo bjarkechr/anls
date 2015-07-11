@@ -39,7 +39,9 @@
         };
 
         function onDateFieldChanged() {
-
+            vm.eventDate.setHours(vm.hour);
+            vm.eventDate.setMinutes(vm.minute);
+            vm.eventDate.setSeconds(vm.second);
         }
 
 

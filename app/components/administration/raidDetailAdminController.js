@@ -232,7 +232,7 @@
             vm.errorOccured = false;
             vm.errorMsg = "";
 
-            eventFactory.deleteEvent({
+            eventFactory.delete({
                     raidId: vm.raidId,
                     eventId: event.id
                 }, onSuccess,
@@ -334,45 +334,32 @@
             vm.errorOccured = false;
             vm.errorMsg = "";
 
-            event.date = dataFormatService.dateToString(eventDate);
-
-            $log.log(event);
-
-
-
             eventFactory.get({
                 raidId: vm.raidId,
                 eventId: event.id
-            }, onGetSuccess, onGetError);
-
-
+            }, onGetSuccess, onError);
 
             function onGetSuccess(eventFac) {
-                $log.log(eventFac);
+                eventFac.date = dataFormatService.dateToString(eventDate);
+
+                var promise = eventFac.$update({
+                    raidId: vm.raidId,
+                    eventId: event.id
+                });
+
+                promise.then(onSuccess,
+                    onError);
+
+                function onSuccess() {
+                    setTimeout(function () {
+                        loadRaid();
+                    }, 1000);
+                }
             }
 
-            function onGetError(reason) {
-                $log.log(reason);
+            function onError(reason) {
+                vm.errorMsg = "Error modifying event. Reason: " + reason.data;
             }
-
-            //            var promise = event.$save({
-            //                raidId: vm.raidId,
-            //                eventId: event.id
-            //            });
-            //
-            //            promise.then(onSuccess,
-            //                onError);
-            //
-            //            function onSuccess() {
-            //                setTimeout(function () {
-            //                    loadRaid();
-            //                }, 1000);
-            //            }
-            //
-            //            function onError(reason) {
-            //                vm.errorOccured = true;
-            //                vm.errorMsg = "Error modifying event. Reason: " + reason.data;
-            //            }
         }
     }
 

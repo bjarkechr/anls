@@ -10,8 +10,11 @@
             raidId: '@id',
             eventId: '@id'
         }, {
-            'deleteEvent': {
+            'delete': {
                 method: 'DELETE'
+            },
+            'update': {
+                method: 'PUT'
             }
         });
     }
