@@ -3,9 +3,9 @@
 
     angular
         .module('anlsApp')
-        .controller('RaidAdminController', RaidAdminController);
+        .controller('RaidAdminViewController', RaidAdminViewController);
 
-    function RaidAdminController(raidFactory, instanceFactory, $log, $window, dataFormatService) {
+    function RaidAdminViewController(raidFactory, instanceFactory, $log, $window, dataFormatService) {
         var vm = this;
 
         // Properties

@@ -3,9 +3,9 @@
 
     angular
         .module('anlsApp')
-        .controller('RaidDetailAdminAddLootController', RaidDetailAdminAddLootController);
+        .controller('AddLootModalViewController', AddLootModalViewController);
 
-    function RaidDetailAdminAddLootController($log, $modalInstance, players, items, selectedPlayer, buyTypes) {
+    function AddLootModalViewController($log, $modalInstance, players, items, selectedPlayer, buyTypes) {
         var vm = this;
 
         vm.players = players;
@@ -17,7 +17,7 @@
         vm.selectedItemQuality = "Normal";
         vm.selectedItem = "";
         vm.comment = "";
-        
+
 
         vm.ok = function () {
             $modalInstance.close({
@@ -33,11 +33,11 @@
             $modalInstance.dismiss('cancel');
         };
 
-        
+
 
         // Functions
 
-        
+
 
         function getItemQualities() {
             return ["Normal", "Heroic", "Mythic"];

@@ -103,7 +103,7 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.plannedRaids | orderBy:'start'">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
                         <td>
@@ -130,7 +130,7 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
                         <td>

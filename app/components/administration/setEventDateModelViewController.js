@@ -3,9 +3,9 @@
 
     angular
         .module('anlsApp')
-        .controller('SetNewEventTimestampModelController', SetNewEventTimestampModelController);
+        .controller('SetEventDateModalViewController', SetEventDateModalViewController);
 
-    function SetNewEventTimestampModelController($log, $modalInstance, eventDate, dataFormatService) {
+    function SetEventDateModalViewController($log, $modalInstance, eventDate, dataFormatService) {
         var vm = this;
 
         vm.eventDate = eventDate;

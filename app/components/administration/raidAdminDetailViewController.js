@@ -3,14 +3,13 @@
 
     angular
         .module('anlsApp')
-        .controller('RaidDetailAdminController', RaidDetailAdminController);
+        .controller('RaidAdminDetailViewController', RaidAdminDetailViewController);
 
-    function RaidDetailAdminController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
+    function RaidAdminDetailViewController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
         vm.instance = "";
-        vm.startDate;
         vm.startDisplayDateStr;
         vm.status = "";
         vm.errorOccured = false;
@@ -45,8 +44,8 @@
         function openAddLootModal(player) {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'app/components/administration/raidDetailAdminAddLootView.html',
-                controller: 'RaidDetailAdminAddLootController as vm',
+                templateUrl: 'app/components/administration/addLootModalView.html',
+                controller: 'AddLootModalViewController as vm',
                 resolve: {
                     players: function () {
                         return vm.activePlayers;
@@ -74,8 +73,8 @@
         function openSetNewEventTimestampModal(event) {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'app/components/administration/setNewEventTimestampModelView.html',
-                controller: 'SetNewEventTimestampModelController as vm',
+                templateUrl: 'app/components/administration/setEventDateModalView.html',
+                controller: 'SetEventDateModalViewController as vm',
                 resolve: {
                     eventDate: function () {
                         return event.parsedDate;
@@ -116,8 +115,7 @@
             function onRaidLoaded(raid) {
                 vm.instance = raid.instance;
 
-                vm.startDate = dataFormatService.stringToDate(raid.start);
-                vm.startDisplayDateStr = dataFormatService.dateToDisplayString(vm.startDate);
+                vm.startDisplayDateStr = dataFormatService.dateToDisplayString(dataFormatService.stringToDate(raid.start));
 
                 vm.status = raid.status;
 
