@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">A Necessary Loot System</a>
+            <a class="navbar-brand" href="#/overview">A Necessary Loot System</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -226,7 +226,7 @@
                             </tr>
                             <tr ng-repeat="event in vm.events | orderBy: 'date'">
                                 <td>{{event.displayDate}}
-                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.openSetNewEventTimestampModal(event)" ng-hide="!vm.enableEventEdit"><span class="glyphicon glyphicon-time"></span>
+                                    <button type="button" class="btn btn-primary btn-xs" ng-click="vm.openSetNewEventTimestampModal(event)" ng-hide="!vm.enableEventEdit || !event.canBeModified"><span class="glyphicon glyphicon-time"></span>
                                     </button>
                                 </td>
                                 <td>{{event.type}}</td>
@@ -235,7 +235,7 @@
                                 <td>{{event.comment}}</td>
                                 <td>{{event.itemName}}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteEvent(event)" ng-hide="!vm.enableEventEdit"><span class="glyphicon glyphicon-remove"></span>
+                                    <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteEvent(event)" ng-hide="!vm.enableEventEdit || !event.canBeModified"><span class="glyphicon glyphicon-remove"></span>
                                     </button>
 
                                 </td>

@@ -47,7 +47,6 @@
                 animation: true,
                 templateUrl: 'app/components/administration/raidDetailAdminAddLootView.html',
                 controller: 'RaidDetailAdminAddLootController as vm',
-                size: 'lg',
                 resolve: {
                     players: function () {
                         return vm.activePlayers;
@@ -141,6 +140,7 @@
                     // Convert event.date string to javascript date object and save this as a property.
                     vm.events[i].parsedDate = dataFormatService.stringToDate(vm.events[i].date);
                     vm.events[i].displayDate = dataFormatService.dateToDisplayString(vm.events[i].parsedDate);
+                    vm.events[i].canBeModified = vm.events[i].id != null && vm.events[i].id != "";
 
                     if (vm.events[i].type == "Buy") {
                         var item = getItemById(vm.events[i].item);
@@ -333,6 +333,8 @@
         function modifyEvent(event, eventDate) {
             vm.errorOccured = false;
             vm.errorMsg = "";
+
+            $log.log(event);
 
             eventFactory.get({
                 raidId: vm.raidId,

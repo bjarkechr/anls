@@ -2,33 +2,27 @@
     <h3 class="modal-title">Change Event Date</h3>
 </div>
 <div class="modal-body">
-    <form class="form-horizontal">
+    <form>
         <div class="form-group">
             <div class="input-group">
-                <div style="display:inline-block; ">
-                    <datepicker show-weeks="true" class="well well-sm" ng-model="vm.eventDate" ng-change="vm.onDateFieldChanged()"></datepicker>
-                </div>
+                <label>Date</label>
+                <datepicker show-weeks="true" class="well well-sm" ng-model="vm.eventDate" ng-change="vm.onDateFieldChanged()"></datepicker>
             </div>
         </div>
 
         <div class="form-group">
-
-            <div class="col-sm-2">
-                <select class="form-control" ng-model="vm.hour" ng-options="hour for hour in vm.hours" ng-change="vm.onDateFieldChanged()"></select>
+            <label>Time</label>
+            <div class="input-group">
+                <select class="form-control widthauto" ng-model="vm.hour" ng-options="hour for hour in vm.hours" ng-change="vm.onDateFieldChanged()"></select>
+                <span class="input-group-addon widthauto">:</span>
+                <select class="form-control widthauto" ng-model="vm.minute" ng-options="minute for minute in vm.minutes" ng-change="vm.onDateFieldChanged()"></select>
+                <span class="input-group-addon widthauto">:</span>
+                <select class="form-control widthauto" ng-model="vm.second" ng-options="second for second in vm.seconds" ng-change="vm.onDateFieldChanged()"></select>
             </div>
-
-            <div class="col-sm-2">
-                <select class="form-control" ng-model="vm.minute" ng-options="minute for minute in vm.minutes" ng-change="vm.onDateFieldChanged()"></select>
-            </div>
-
-            <div class="col-sm-2">
-                <select class="form-control" ng-model="vm.second" ng-options="second for second in vm.seconds" ng-change="vm.onDateFieldChanged()"></select>
-            </div>
-
         </div>
-
     </form>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="vm.ok()">Update</button>
-        <button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
-    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="vm.ok()">Update</button>
+    <button class="btn btn-warning" ng-click="vm.cancel()">Cancel</button>
+</div>

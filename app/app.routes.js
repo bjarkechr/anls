@@ -23,7 +23,7 @@
                 controllerAs: 'vm'
             })
             .state('raidDetailManagement', {
-                url: '/raidManagement/{raidId}',
+                url: '/raidManagement/:raidId',
                 templateUrl: 'app/components/administration/raidDetailAdminView.html',
                 controller: 'RaidDetailAdminController',
                 controllerAs: 'vm'

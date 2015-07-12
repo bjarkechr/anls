@@ -7,33 +7,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">A Necessary Loot System</a>
+            <a class="navbar-brand" ui-sref="overview">A Necessary Loot System - Administration</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Raid Administration</a>
+                <li class="active"><a ui-sref="raidManagement">Raid</a>
                 </li>
-
-                <li class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Adminstration <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Administrate Players</a>
-                        </li>
-                        <li><a href="#">Administrate Items</a>
-                        </li>
-                        <li><a href="#">Administrate Instances</a>
-                        </li>
-                        <li><a href="#/raidManagement">Administrate Raids</a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Change Settings</a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Statistics</a>
-                        </li>
-                        <li><a href="#">View Items</a>
-                        </li>
-                    </ul>
+                <li><a ui-sref="playerManagement">Players</a>
+                </li>
+                <li><a ui-sref="itemManagement">Items</a>
+                </li>
+                <li><a ui-sref="instanceManagement">Instances</a>
                 </li>
             </ul>
         </div>
@@ -99,7 +83,7 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="raid in vm.activeRaids | orderBy:'start'">
-                        <td><a ng-href="#/raidManagement/{{raid.id}}">{{raid.instance}}</a>
+                        <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
                         <td>
