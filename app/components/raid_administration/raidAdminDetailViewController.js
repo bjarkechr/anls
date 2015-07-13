@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('RaidAdminDetailViewController', RaidAdminDetailViewController);
 
-    function RaidAdminDetailViewController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, itemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
+    function RaidAdminDetailViewController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, instanceItemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
@@ -36,7 +36,8 @@
         vm.enableEventEdit = false;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
 
-        loadItems();
+        loadRaid();
+        loadEvents();
         loadBuyTypes();
 
         // Functions
@@ -44,7 +45,7 @@
         function openAddLootModal(player) {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'app/components/administration/addLootModalView.html',
+                templateUrl: 'app/components/raid_administration/addLootModalView.html',
                 controller: 'AddLootModalViewController as vm',
                 resolve: {
                     players: function () {
@@ -65,15 +66,13 @@
             modalInstance.result.then(function (loot) {
                     addLootToPlayer(loot);
                 },
-                function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
+                function () {});
         }
 
         function openSetNewEventTimestampModal(event) {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'app/components/administration/setEventDateModalView.html',
+                templateUrl: 'app/components/raid_administration/setEventDateModalView.html',
                 controller: 'SetEventDateModalViewController as vm',
                 resolve: {
                     eventDate: function () {
@@ -85,22 +84,10 @@
             modalInstance.result.then(function (eventDate) {
                     modifyEvent(event, eventDate);
                 },
-                function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
+                function () {});
         }
 
-        function loadItems() {
-            vm.items.length = 0;
-            itemFactory.query(null, onItemsLoaded);
-
-            function onItemsLoaded(data) {
-                vm.items = data;
-
-                loadRaid();
-            }
-        }
-
+        
         function loadRaid() {
 
             vm.events.length = 0;
@@ -122,45 +109,9 @@
                 vm.isStartRaidPossible = vm.status == "Planned";
                 vm.isFinishRaidPossible = vm.status == "Active";
 
-                getEvents(raid.events);
-
                 updatePlayerArrays(raid.points, raid.afk, raid.queue);
 
                 updateInactivePlayers(raid.points);
-            }
-
-            function getEvents(events) {
-                var eventLength = events.length;
-                for (var i = 0; i < eventLength; i++) {
-
-                    vm.events.push(events[i]);
-
-                    // Convert event.date string to javascript date object and save this as a property.
-                    vm.events[i].parsedDate = dataFormatService.stringToDate(vm.events[i].date);
-                    vm.events[i].displayDate = dataFormatService.dateToDisplayString(vm.events[i].parsedDate);
-                    vm.events[i].canBeModified = vm.events[i].id != null && vm.events[i].id != "";
-
-                    if (vm.events[i].type == "Buy") {
-                        var item = getItemById(vm.events[i].item);
-                        if (item != null) {
-                            vm.events[i].itemName = item.name + " (" + vm.events[i].itemQuality + ")";
-                        }
-                    } else {
-                        vm.events[i].itemName = "";
-                    }
-                }
-
-                function getItemById(itemId) {
-                    var itemsLength = vm.items.length;
-                    var item;
-                    for (var i = 0; i < itemsLength; i++) {
-                        if (vm.items[i].id == itemId) {
-                            item = vm.items[i];
-                            break;
-                        }
-                    }
-                    return item;
-                }
             }
 
             function updatePlayerArrays(points, afkPlayerNames, queuedPlayerNames) {
@@ -215,6 +166,61 @@
                 }
             }
         }
+
+        function loadEvents() {
+
+            vm.events.length = 0;
+
+            eventFactory.query({
+                raidId: vm.raidId
+            }, onEventsLoaded);
+
+            function onEventsLoaded(events) {
+                var eventLength = events.length;
+                for (var i = 0; i < eventLength; i++) {
+
+                    vm.events.push(events[i]);
+
+                    // Convert event.date string to javascript date object and save this as a property.
+                    vm.events[i].parsedDate = dataFormatService.stringToDate(vm.events[i].date);
+                    vm.events[i].displayDate = dataFormatService.dateToDisplayString(vm.events[i].parsedDate);
+                    vm.events[i].canBeModified = vm.events[i].id != null && vm.events[i].id != "";
+
+                    if (vm.events[i].type == "Buy") {
+                        var item = getItemById(vm.events[i].item);
+                        if (item != null) {
+                            vm.events[i].itemName = item.name + " (" + vm.events[i].itemQuality + ")";
+                        }
+                    } else {
+                        vm.events[i].itemName = "";
+                    }
+                }
+            }
+
+            function getItemById(itemId) {
+                var itemsLength = vm.items.length;
+                var item;
+                for (var i = 0; i < itemsLength; i++) {
+                    if (vm.items[i].id == itemId) {
+                        item = vm.items[i];
+                        break;
+                    }
+                }
+                return item;
+            }
+        }
+        
+        function loadItems() {
+            vm.items.length = 0;
+            instanceItemFactory.query(null, onItemsLoaded);
+
+            function onItemsLoaded(data) {
+                vm.items = data;
+
+                loadRaid();
+            }
+        }
+
 
         function loadBuyTypes() {
             vm.buyTypes.length = 0;
