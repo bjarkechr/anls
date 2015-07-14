@@ -5,13 +5,13 @@
         .module('anlsApp')
         .controller('RaidAdminDetailViewController', RaidAdminDetailViewController);
 
-    function RaidAdminDetailViewController($log, $stateParams, $modal, filterFilter, raidFactory, eventFactory, instanceItemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
+    function RaidAdminDetailViewController($log, $stateParams, $modal, raidDataFactory, filterFilter, raidFactory, eventFactory, instanceItemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
         vm.instance = "";
-        vm.startDisplayDateStr;
         vm.status = "";
+        vm.startDisplayDateStr;
         vm.errorOccured = false;
         vm.errorMsg = "";
         vm.items = [];
@@ -40,54 +40,13 @@
         loadEvents();
         loadBuyTypes();
 
+        raidDataFactory.getRaidData(vm.raidId)
+            .then(function (result) {
+                $log.log(result);
+            });
+
         // Functions
 
-        function openAddLootModal(player) {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'app/components/raid_administration/addLootModalView.html',
-                controller: 'AddLootModalViewController as vm',
-                resolve: {
-                    players: function () {
-                        return vm.activePlayers;
-                    },
-                    items: function () {
-                        return vm.items;
-                    },
-                    selectedPlayer: function () {
-                        return player;
-                    },
-                    buyTypes: function () {
-                        return vm.buyTypes;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (loot) {
-                    addLootToPlayer(loot);
-                },
-                function () {});
-        }
-
-        function openSetNewEventTimestampModal(event) {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'app/components/raid_administration/setEventDateModalView.html',
-                controller: 'SetEventDateModalViewController as vm',
-                resolve: {
-                    eventDate: function () {
-                        return event.parsedDate;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (eventDate) {
-                    modifyEvent(event, eventDate);
-                },
-                function () {});
-        }
-
-        
         function loadRaid() {
 
             vm.events.length = 0;
@@ -95,7 +54,7 @@
             vm.queuedPlayers.length = 0;
             vm.activePlayers.length = 0;
 
-            var raid = raidFactory.get({
+            var raidPromise = raidFactory.get({
                 raidId: vm.raidId
             }).$promise.then(onRaidLoaded);
 
@@ -171,9 +130,11 @@
 
             vm.events.length = 0;
 
-            eventFactory.query({
+            var eventprom = eventFactory.query({
                 raidId: vm.raidId
-            }, onEventsLoaded);
+            });
+
+            eventprom.$promise.then(onEventsLoaded);
 
             function onEventsLoaded(events) {
                 var eventLength = events.length;
@@ -209,7 +170,7 @@
                 return item;
             }
         }
-        
+
         function loadItems() {
             vm.items.length = 0;
             instanceItemFactory.query(null, onItemsLoaded);
@@ -366,6 +327,51 @@
             function onError(reason) {
                 vm.errorMsg = "Error modifying event. Reason: " + reason.data;
             }
+        }
+
+        function openAddLootModal(player) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'app/components/raid_administration/addLootModalView.html',
+                controller: 'AddLootModalViewController as vm',
+                resolve: {
+                    players: function () {
+                        return vm.activePlayers;
+                    },
+                    items: function () {
+                        return vm.items;
+                    },
+                    selectedPlayer: function () {
+                        return player;
+                    },
+                    buyTypes: function () {
+                        return vm.buyTypes;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (loot) {
+                    addLootToPlayer(loot);
+                },
+                function () {});
+        }
+
+        function openSetNewEventTimestampModal(event) {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'app/components/raid_administration/setEventDateModalView.html',
+                controller: 'SetEventDateModalViewController as vm',
+                resolve: {
+                    eventDate: function () {
+                        return event.parsedDate;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (eventDate) {
+                    modifyEvent(event, eventDate);
+                },
+                function () {});
         }
     }
 
