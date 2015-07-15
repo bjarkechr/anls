@@ -5,183 +5,78 @@
         .module('anlsApp')
         .controller('RaidAdminDetailViewController', RaidAdminDetailViewController);
 
-    function RaidAdminDetailViewController($log, $stateParams, $modal, raidDataFactory, filterFilter, raidFactory, eventFactory, instanceItemFactory, playerPointsFactory, dataFormatService, buytypeFactory) {
+    function RaidAdminDetailViewController($log, $stateParams, $modal, raidDataFactory, filterFilter, eventFactory, dataFormatService, buytypeFactory) {
         var vm = this;
 
         vm.raidId = $stateParams.raidId;
+
+        vm.errorMsg = "";
+
+        vm.raidData = {};
+
         vm.instance = "";
         vm.status = "";
         vm.startDisplayDateStr;
-        vm.errorOccured = false;
-        vm.errorMsg = "";
-        vm.items = [];
-        vm.events = [];
+        vm.isStartRaidPossible = false;
+        vm.isFinishRaidPossible = false;
+
         vm.activePlayers = [];
         vm.afkPlayers = [];
         vm.queuedPlayers = [];
         vm.inactivePlayers = [];
-        vm.buyTypes = [];
+
         vm.isInactivePlayersCollapsed = true;
+
+        vm.items = [];
+        vm.buyTypes = [];
+
+        vm.events = [];
+        vm.enableEventEdit = false;
+
         vm.addPlayerToRaid = addPlayerToRaid;
         vm.deleteEvent = deleteEvent;
         vm.afkPlayer = afkPlayer;
         vm.queuePlayer = queuePlayer;
         vm.returnAfkPlayer = returnAfkPlayer;
         vm.returnQueuePlayer = returnQueuePlayer;
-        vm.openAddLootModal = openAddLootModal;
         vm.startRaid = startRaid;
         vm.finishRaid = finishRaid;
-        vm.isStartRaidPossible = false;
-        vm.isFinishRaidPossible = false;
-        vm.enableEventEdit = false;
+
+        vm.openAddLootModal = openAddLootModal;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
 
-        loadRaid();
-        loadEvents();
-        loadBuyTypes();
+        loadRaidData();
 
-        raidDataFactory.getRaidData(vm.raidId)
-            .then(function (result) {
-                $log.log(result);
-            });
+        loadBuyTypes();
 
         // Functions
 
-        function loadRaid() {
+        function loadRaidData() {
+            raidDataFactory.getRaidData(vm.raidId)
+                .then(function (result) {
 
-            vm.events.length = 0;
-            vm.afkPlayers.length = 0;
-            vm.queuedPlayers.length = 0;
-            vm.activePlayers.length = 0;
+                        vm.raidData = result;
 
-            var raidPromise = raidFactory.get({
-                raidId: vm.raidId
-            }).$promise.then(onRaidLoaded);
+                        vm.instance = result.instance;
+                        vm.status = result.status;
+                        vm.startDisplayDateStr = result.startDisplayDateStr;
+                        vm.isStartRaidPossible = result.isStartRaidPossible;
+                        vm.isFinishRaidPossible = result.isFinishRaidPossible;
 
-            function onRaidLoaded(raid) {
-                vm.instance = raid.instance;
+                        vm.activePlayers = result.activePlayers;
+                        vm.afkPlayers = result.afkPlayers;
+                        vm.queuedPlayers = result.queuedPlayers;
+                        vm.inactivePlayers = result.inactivePlayers;
 
-                vm.startDisplayDateStr = dataFormatService.dateToDisplayString(dataFormatService.stringToDate(raid.start));
+                        vm.events = result.events;
 
-                vm.status = raid.status;
+                        vm.items = result.instanceItems;
 
-                vm.isStartRaidPossible = vm.status == "Planned";
-                vm.isFinishRaidPossible = vm.status == "Active";
-
-                updatePlayerArrays(raid.points, raid.afk, raid.queue);
-
-                updateInactivePlayers(raid.points);
-            }
-
-            function updatePlayerArrays(points, afkPlayerNames, queuedPlayerNames) {
-
-                var pointsLength = points.length;
-                var afkLength = afkPlayerNames.length;
-                var queuedLength = queuedPlayerNames.length;
-
-                for (var i = 0; i < pointsLength; i++) {
-
-                    // Distribute point records between activePlayers, afkPlayers and queuedPlayers arrays.
-                    if (afkLength > 0 && isPlayerInArray(points[i].player, afkPlayerNames, afkLength)) {
-                        vm.afkPlayers.push(points[i]);
-                    } else if (queuedLength > 0 && isPlayerInArray(points[i].player, queuedPlayerNames, queuedLength)) {
-                        vm.queuedPlayers.push(points[i]);
-                    } else {
-                        vm.activePlayers.push(points[i]);
-                    }
-                }
-
-                function isPlayerInArray(playerName, arr, arrLength) {
-                    var rv = false;
-                    for (var i = 0; i < arrLength; i++) {
-                        rv = arr[i] === playerName;
-
-                        if (rv) break;
-                    }
-                    return rv;
-                }
-            }
-
-            function updateInactivePlayers(activePlayerPoints) {
-                vm.inactivePlayers.length = 0;
-
-                playerPointsFactory.query(null, onPlayersLoaded);
-
-                function onPlayersLoaded(allPlayerPoints) {
-                    var len = allPlayerPoints.length;
-
-                    for (var i = 0; i < len; i++) {
-                        // Use a filter to figure out whether this player exists in array of active players or not.
-                        var filterArr = filterFilter(activePlayerPoints, {
-                            player: allPlayerPoints[i].player
-                        });
-
-                        // if filterArr contains any elements then it is because we have a match in active players
-                        // and this player should _not_ be included in list of inactive players.
-                        if (filterArr.length == 0) {
-                            vm.inactivePlayers.push(allPlayerPoints[i]);
-                        }
-                    }
-                }
-            }
+                    },
+                    function (errorMsg) {
+                        vm.errorMsg = errorMsg;
+                    });
         }
-
-        function loadEvents() {
-
-            vm.events.length = 0;
-
-            var eventprom = eventFactory.query({
-                raidId: vm.raidId
-            });
-
-            eventprom.$promise.then(onEventsLoaded);
-
-            function onEventsLoaded(events) {
-                var eventLength = events.length;
-                for (var i = 0; i < eventLength; i++) {
-
-                    vm.events.push(events[i]);
-
-                    // Convert event.date string to javascript date object and save this as a property.
-                    vm.events[i].parsedDate = dataFormatService.stringToDate(vm.events[i].date);
-                    vm.events[i].displayDate = dataFormatService.dateToDisplayString(vm.events[i].parsedDate);
-                    vm.events[i].canBeModified = vm.events[i].id != null && vm.events[i].id != "";
-
-                    if (vm.events[i].type == "Buy") {
-                        var item = getItemById(vm.events[i].item);
-                        if (item != null) {
-                            vm.events[i].itemName = item.name + " (" + vm.events[i].itemQuality + ")";
-                        }
-                    } else {
-                        vm.events[i].itemName = "";
-                    }
-                }
-            }
-
-            function getItemById(itemId) {
-                var itemsLength = vm.items.length;
-                var item;
-                for (var i = 0; i < itemsLength; i++) {
-                    if (vm.items[i].id == itemId) {
-                        item = vm.items[i];
-                        break;
-                    }
-                }
-                return item;
-            }
-        }
-
-        function loadItems() {
-            vm.items.length = 0;
-            instanceItemFactory.query(null, onItemsLoaded);
-
-            function onItemsLoaded(data) {
-                vm.items = data;
-
-                loadRaid();
-            }
-        }
-
 
         function loadBuyTypes() {
             vm.buyTypes.length = 0;
@@ -194,25 +89,20 @@
         }
 
         function deleteEvent(event) {
-            vm.errorOccured = false;
             vm.errorMsg = "";
 
             eventFactory.delete({
                     raidId: vm.raidId,
                     eventId: event.id
-                }, onSuccess,
-                onError);
-
-            function onSuccess() {
-                setTimeout(function () {
-                    loadRaid();
-                }, 1000);
-            }
-
-            function onError(reason) {
-                vm.errorOccured = true;
-                vm.errorMsg = "Error occured while deleting event.<br> " + reason;
-            }
+                }).$promise
+                .then(function () {
+                        setTimeout(function () {
+                            loadRaidData();
+                        }, 100);
+                    },
+                    function (reason) {
+                        vm.errorMsg = "Error occured while deleting event.<br> " + reason;
+                    });
         }
 
         function startRaid() {
@@ -262,7 +152,6 @@
         }
 
         function createAndSendEvent(type, playername, modifyEventCallback, errorMsg) {
-            vm.errorOccured = false;
             vm.errorMsg = "";
 
             var event = new eventFactory();
@@ -276,53 +165,39 @@
                 modifyEventCallback(event);
             }
 
-            var promise = event.$save({
-                raidId: vm.raidId
-            });
-
-            promise.then(onSuccess,
-                onError);
-
-            function onSuccess() {
-                setTimeout(function () {
-                    loadRaid();
-                }, 1000);
-            }
-
-            function onError(reason) {
-                vm.errorOccured = true;
-                vm.errorMsg = errorMsg + ". Reason: " + reason.data;
-            }
+            event.$save({
+                    raidId: vm.raidId
+                })
+                .then(function () {
+                        setTimeout(function () {
+                            loadRaidData();
+                        }, 100);
+                    },
+                    function (reason) {
+                        vm.errorMsg = errorMsg + ". Reason: " + reason.data;
+                    });
         }
 
         function modifyEvent(event, eventDate) {
-            vm.errorOccured = false;
             vm.errorMsg = "";
 
-            $log.log(event);
-
             eventFactory.get({
-                raidId: vm.raidId,
-                eventId: event.id
-            }, onGetSuccess, onError);
-
-            function onGetSuccess(eventFac) {
-                eventFac.date = dataFormatService.dateToString(eventDate);
-
-                var promise = eventFac.$update({
                     raidId: vm.raidId,
                     eventId: event.id
-                });
+                }).$promise
+                .then(function (eventFac) {
+                    eventFac.date = dataFormatService.dateToString(eventDate);
 
-                promise.then(onSuccess,
-                    onError);
-
-                function onSuccess() {
-                    setTimeout(function () {
-                        loadRaid();
-                    }, 1000);
-                }
-            }
+                    eventFac.$update({
+                        raidId: vm.raidId,
+                        eventId: event.id
+                    }).then(function () {
+                            setTimeout(function () {
+                                loadRaidData();
+                            }, 100);
+                        },
+                        onError);
+                }, onError);
 
             function onError(reason) {
                 vm.errorMsg = "Error modifying event. Reason: " + reason.data;

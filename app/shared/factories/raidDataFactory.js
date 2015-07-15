@@ -5,7 +5,7 @@
         .module('anlsApp')
         .factory('raidDataFactory', raidDataFactory);
 
-    function raidDataFactory(raidFactory, playerPointsFactory, $log, $q, filterFilter, dataFormatService) {
+    function raidDataFactory($log, $q, filterFilter, raidFactory, playerPointsFactory, instanceFactory, instanceItemFactory, dataFormatService) {
 
         function updatePlayerArrays(points, afkPlayerNames, queuedPlayerNames, raidData) {
             var pointsLength = points.length;
@@ -51,24 +51,35 @@
             }
         }
 
+        function getItemById(itemId, items) {
+            var itemsLength = items.length;
+            var item;
+            for (var i = 0; i < itemsLength; i++) {
+                if (items[i].id == itemId) {
+                    item = items[i];
+                    break;
+                }
+            }
+            return item;
+        }
+
         return {
             getRaidData: function (raidId) {
 
                 var deferred = $q.defer();
+                var raidData = {};
 
                 var ppFactPromise = playerPointsFactory.query(null).$promise;
-
                 var raidFactPromise = raidFactory.get({
                     raidId: raidId
                 }).$promise;
+                var instanceFactPromise = instanceFactory.query(null).$promise;
 
-                $q.all([raidFactPromise, ppFactPromise])
-                    .then(function (results, res) {
-
+                $q.all([raidFactPromise, ppFactPromise, instanceFactPromise])
+                    .then(function (results) {
                             var raidFactResult = results[0];
                             var ppFactResult = results[1];
-
-                            var raidData = {};
+                            var instFactResult = results[2];
 
                             raidData.instance = raidFactResult.instance;
                             raidData.startDate = dataFormatService.stringToDate(raidFactResult.start);
@@ -77,15 +88,63 @@
                             raidData.isStartRaidPossible = raidData.status == "Planned";
                             raidData.isFinishRaidPossible = raidData.status == "Active";
 
+                            raidData.events = raidFactResult.events;
+
                             //Initialize arrays
                             raidData.activePlayers = [];
                             raidData.afkPlayers = [];
                             raidData.queuedPlayers = [];
                             raidData.inactivePlayers = [];
 
+                            raidData.instanceItems = [];
+
+
                             updatePlayerArrays(raidFactResult.points, raidFactResult.afk, raidFactResult.queue, raidData);
 
                             updateInactivePlayers(raidFactResult.points, ppFactResult, raidData);
+
+                            //Get instance ID from instance name
+                            var instanceId = null;
+                            for (var i = 0; i < instFactResult.length; i++) {
+                                if (instFactResult[i].name == raidData.instance) {
+                                    instanceId = instFactResult[i].id;
+                                    break;
+                                }
+                            }
+                            if (instanceId != null) {
+                                return instanceItemFactory.query({
+                                    instanceId: instanceId
+                                }).$promise;
+                            } else {
+                                return $q.reject("No instance id found for instance " + raidData.instance);
+                            }
+                        },
+                        function (errorMsg) {
+                            return $q.reject(errorMsg);
+                        })
+                    .then(function (result) {
+                            //Save items found in instance
+                            raidData.instanceItems = result;
+
+                            //Extend events with bind-friendly properties
+                            var eventLength = raidData.events.length;
+                            for (var i = 0; i < eventLength; i++) {
+
+                                // Convert event.date string to javascript date object and save this as a property.
+                                raidData.events[i].parsedDate = dataFormatService.stringToDate(raidData.events[i].date);
+                                raidData.events[i].displayDate = dataFormatService.dateToDisplayString(raidData.events[i].parsedDate);
+                                raidData.events[i].canBeModified = raidData.events[i].id.length > 0;
+
+                                // For buy events lookup item by Id and add name of bought item
+                                if (raidData.events[i].type == "Buy") {
+                                    var item = getItemById(raidData.events[i].item, raidData.instanceItems);
+                                    if (item != null) {
+                                        raidData.events[i].itemName = item.name + " (" + raidData.events[i].itemQuality + ")";
+                                    }
+                                } else {
+                                    raidData.events[i].itemName = "";
+                                }
+                            }
 
                             deferred.resolve(raidData);
                         },
