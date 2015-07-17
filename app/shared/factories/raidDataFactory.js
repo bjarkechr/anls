@@ -5,21 +5,21 @@
         .module('anlsApp')
         .factory('raidDataFactory', raidDataFactory);
 
-    function raidDataFactory($log, $q, filterFilter, raidFactory, playerPointsFactory, instanceFactory, instanceItemFactory, dataFormatService) {
+    function raidDataFactory($log, $q, filterFilter, raidFactory, playerFactory, playerPointsFactory, instanceFactory, instanceItemFactory, dataFormatService, utilityService) {
 
-        function updatePlayerArrays(points, afkPlayerNames, queuedPlayerNames, raidData) {
-            var pointsLength = points.length;
+        function updatePlayerArrays(activePlayerPoints, afkPlayerNames, queuedPlayerNames, raidData) {
+            var pointsLength = activePlayerPoints.length;
             var afkLength = afkPlayerNames.length;
             var queuedLength = queuedPlayerNames.length;
 
             // Distribute point records between activePlayers, afkPlayers and queuedPlayers arrays.
             for (var i = 0; i < pointsLength; i++) {
-                if (afkLength > 0 && isPlayerInArray(points[i].player, afkPlayerNames, afkLength)) {
-                    raidData.afkPlayers.push(points[i]);
-                } else if (queuedLength > 0 && isPlayerInArray(points[i].player, queuedPlayerNames, queuedLength)) {
-                    raidData.queuedPlayers.push(points[i]);
+                if (afkLength > 0 && isPlayerInArray(activePlayerPoints[i].player, afkPlayerNames, afkLength)) {
+                    raidData.afkPlayers.push(activePlayerPoints[i]);
+                } else if (queuedLength > 0 && isPlayerInArray(activePlayerPoints[i].player, queuedPlayerNames, queuedLength)) {
+                    raidData.queuedPlayers.push(activePlayerPoints[i]);
                 } else {
-                    raidData.activePlayers.push(points[i]);
+                    raidData.activePlayers.push(activePlayerPoints[i]);
                 }
             }
 
@@ -74,12 +74,14 @@
                     raidId: raidId
                 }).$promise;
                 var instanceFactPromise = instanceFactory.query(null).$promise;
+                var playerFactPromise = playerFactory.query(null).$promise;
 
-                $q.all([raidFactPromise, ppFactPromise, instanceFactPromise])
+                $q.all([raidFactPromise, ppFactPromise, instanceFactPromise, playerFactPromise])
                     .then(function (results) {
                             var raidFactResult = results[0];
-                            var ppFactResult = results[1];
+                            var pointsFactResult = results[1];
                             var instFactResult = results[2];
+                            var playerFactResult = results[3];
 
                             raidData.instance = raidFactResult.instance;
                             raidData.startDate = dataFormatService.stringToDate(raidFactResult.start);
@@ -98,11 +100,12 @@
 
                             raidData.instanceItems = [];
 
-
                             updatePlayerArrays(raidFactResult.points, raidFactResult.afk, raidFactResult.queue, raidData);
 
-                            updateInactivePlayers(raidFactResult.points, ppFactResult, raidData);
-
+                            updateInactivePlayers(raidFactResult.points, pointsFactResult, raidData);
+                            
+                            utilityService.mergePlayerAndPlayerPoints(playerFactResult, raidData.activePlayers.concat(raidData.afkPlayers).concat(raidData.queuedPlayers).concat(raidData.inactivePlayers));
+                    
                             //Get instance ID from instance name
                             var instanceId = null;
                             for (var i = 0; i < instFactResult.length; i++) {
@@ -133,7 +136,7 @@
                                 // Convert event.date string to javascript date object and save this as a property.
                                 raidData.events[i].parsedDate = dataFormatService.stringToDate(raidData.events[i].date);
                                 raidData.events[i].displayDate = dataFormatService.dateToDisplayString(raidData.events[i].parsedDate);
-                                raidData.events[i].canBeModified = raidData.events[i].id.length > 0;
+                                raidData.events[i].canBeModified = raidData.events[i].id != null;
 
                                 // For buy events lookup item by Id and add name of bought item
                                 if (raidData.events[i].type == "Buy") {

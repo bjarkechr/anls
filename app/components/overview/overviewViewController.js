@@ -5,13 +5,14 @@
         .module('anlsApp')
         .controller('OverviewViewController', OverviewViewController);
 
-    function OverviewViewController($log, playerPointsFactory, raidFactory, dataFormatService) {
+    function OverviewViewController($log, $q, playerPointsFactory, playerFactory, raidFactory, dataFormatService, utilityService) {
         var vm = this;
 
         vm.activeRaids = [];
         vm.plannedRaids = [];
         vm.finishedRaids = [];
         vm.playerPoints = [];
+        vm.errorMsg = "";
 
 
         loadPlayerPoints();
@@ -21,11 +22,21 @@
         function loadPlayerPoints() {
             vm.playerPoints.length = 0;
 
-            playerPointsFactory.query(null, onLoaded);
-
-            function onLoaded(data) {
-                vm.playerPoints = data;
-            }
+            $q.all([playerPointsFactory.query(null).$promise, playerFactory.query(null).$promise])
+                .then(function (results) {
+                        var playerPoints = results[0];
+                        var players = results[1];
+                        utilityService.mergePlayerAndPlayerPoints(players, playerPoints);
+                        
+                        vm.playerPoints = playerPoints;
+                
+                $log.log(vm.playerPoints);
+                    },
+                    function (errorMsg) {
+                        $log.log(errorMsg);
+                        vm.errorMsg = errorMsg.status + " (" + errorMsg.statusText + ") - Check development log for details.";
+                        $log.error(errorMsg);
+                    });
         }
 
         function loadRaids() {

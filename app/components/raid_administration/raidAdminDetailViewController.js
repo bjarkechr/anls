@@ -74,7 +74,8 @@
 
                     },
                     function (errorMsg) {
-                        vm.errorMsg = errorMsg;
+                        vm.errorMsg = errorMsg.status + " (" + errorMsg.statusText + ") - Check development log for details.";
+                        $log.error(errorMsg);
                     });
         }
 

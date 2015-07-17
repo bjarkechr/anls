@@ -3,9 +3,9 @@
 
     angular
         .module('anlsApp')
-        .factory('raidFactory', raidFactory);
+        .factory('playerFactory', playerFactory);
 
-    function raidFactory($resource) {
+    function playerFactory($resource) {
         return $resource('http://tor.superhelt.org:\8080/players/:playerId/', {
             playerId: '@id'
         }, {

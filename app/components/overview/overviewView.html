@@ -29,9 +29,17 @@
 <div class="container">
     <!-- Example row of columns -->
     <div class="row">
+        <div class="col-xs-12">
+            <alert ng-show="vm.errorMsg.length > 0" type="danger" close="vm.errorMsg = ''"><strong>Error!</strong> {{vm.errorMsg}}</alert>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-5">
             <h3>Players</h3>
-            <p>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">All Players <span class="badge">{{vm.playerPoints.length}}</span></h3>
+                </div>
                 <table class="table table-striped table-condensed">
                     <tr>
                         <th>Player</th>
@@ -40,13 +48,13 @@
                         <th>Total EP</th>
                     </tr>
                     <tr ng-repeat="points in vm.playerPoints | orderBy : ['-ep', 'totalEp', 'player']">
-                        <td>{{points.player}}</td>
+                        <td style="color:{{points.playerClassColor}};">{{points.player}}</td>
                         <td>{{points.ep}}</td>
                         <td>{{points.qp}}</td>
                         <td>{{points.totalEp}}</td>
                     </tr>
                 </table>
-            </p>
+            </div>
         </div>
 
         <div class="col-md-offset-1 col-md-5">
@@ -68,7 +76,7 @@
                 </table>
             </div>
 
-            <div class="panel panel-primary">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <h3 class="panel-title">Planned</h3>
                 </div>
@@ -85,7 +93,7 @@
                 </table>
             </div>
 
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Finished</h3>
                 </div>
