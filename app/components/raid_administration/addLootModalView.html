@@ -1,3 +1,7 @@
+<script type="text/ng-template" id="customTemplate.html">
+    <div>a{{match.label}}a</div>
+</script>
+
 <div class="modal-header">
     <h3 class="modal-title">Add Lootss to {{vm.selectedPlayer.player}}</h3>
 </div>
@@ -6,7 +10,7 @@
         <div class="form-group">
             <label for="item" class="col-sm-2 control-label">Item</label>
             <div class="col-sm-10">
-                <input type="text" ng-model="vm.selectedItem" typeahead="item as item.name for item in vm.items | filter:{name: $viewValue} | limitTo:15" class="form-control" />
+                <input type="text" ng-model="vm.selectedItem" typeahead="item as item.name for item in vm.items | filter:{name: $viewValue} | limitTo:30"  class="form-control" />
             </div>
         </div>
         <div class="form-group">

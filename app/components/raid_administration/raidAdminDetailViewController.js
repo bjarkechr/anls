@@ -32,6 +32,12 @@
 
         vm.events = [];
         vm.enableEventEdit = false;
+        vm.eventFilter = eventFilter;
+        vm.eventFilterAdd = false;
+        vm.eventFilterBonus = false;
+        vm.eventFilterAfk = false;
+        vm.eventFilterQueue = false;
+        vm.eventFilterBuy = false;
 
         vm.addPlayerToRaid = addPlayerToRaid;
         vm.deleteEvent = deleteEvent;
@@ -42,6 +48,7 @@
         vm.startRaid = startRaid;
         vm.finishRaid = finishRaid;
 
+
         vm.openAddLootModal = openAddLootModal;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
 
@@ -50,6 +57,11 @@
         loadBuyTypes();
 
         // Functions
+
+        function eventFilter(event) {
+
+            return (event.type == "Buy" && !vm.eventFilterBuy) || (event.type == "Add" && !vm.eventFilterAdd) || (event.type == "Bonus" && !vm.eventFilterBonus) || ((event.type == "Afk" || event.type == "ReturnAfk") && !vm.eventFilterAfk) || ((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || (event.type == "Start" || event.type == "Finish");;
+        }
 
         function loadRaidData() {
             raidDataFactory.getRaidData(vm.raidId)

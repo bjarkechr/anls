@@ -1,9 +1,9 @@
 {
   "vars": {
     "@gray-base": "#fff",
-    "@gray-darker": "lighten(@gray-base, 13.5%)",
-    "@gray-dark": "lighten(@gray-base, 20%)",
-    "@gray": "lighten(@gray-base, 33.5%)",
+    "@gray-darker": "#F1F1F1",
+    "@gray-dark": "#D9D9D9",
+    "@gray": "#7C7C7C",
     "@gray-light": "lighten(@gray-base, 46.7%)",
     "@gray-lighter": "lighten(@gray-base, 93.5%)",
     "@brand-primary": "#2980b9",
@@ -430,5 +430,5 @@
     "scrollspy.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=4640ded44e1e8b8fb670"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=934203e988b5e4c65924"
 }
