@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('playerPointsFactory', playerPointsFactory);
 
-    function playerPointsFactory($resource) {
-        return $resource('http://tor.superhelt.org\:8080/points');
+    function playerPointsFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'points');
     }
 
 })();

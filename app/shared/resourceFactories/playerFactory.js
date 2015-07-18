@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('playerFactory', playerFactory);
 
-    function playerFactory($resource) {
-        return $resource('http://tor.superhelt.org:\8080/players/:playerId/', {
+    function playerFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'players/:playerId/', {
             playerId: '@id'
         }, {
             'deletePlayer': {

@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('buytypeFactory', buytypeFactory);
 
-    function buytypeFactory($resource) {
-        return $resource('http://tor.superhelt.org\:8080/types/buytypes');
+    function buytypeFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'types/buytypes');
     }
 
 })();

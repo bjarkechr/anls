@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('itemFactory', itemFactory);
 
-    function itemFactory($resource) {
-        return $resource('http://tor.superhelt.org:\8080/items/:itemId', {
+    function itemFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'items/:itemId', {
             itemId: '@id'
         }, {
             'deleteItem': {

@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('instanceFactory', instanceFactory);
 
-    function instanceFactory($resource) {
-        return $resource('http://tor.superhelt.org:\8080/instances');
+    function instanceFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'instances');
     }
 
 })();

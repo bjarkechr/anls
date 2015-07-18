@@ -5,8 +5,8 @@
         .module('anlsApp')
         .factory('eventFactory', eventFactory);
 
-    function eventFactory($resource) {
-        return $resource('http://tor.superhelt.org:\8080/raids/:raidId/events/:eventId', {
+    function eventFactory($resource, BASE_API_URL) {
+        return $resource(BASE_API_URL + 'raids/:raidId/events/:eventId', {
             raidId: '@id',
             eventId: '@id'
         }, {
