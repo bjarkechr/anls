@@ -6,7 +6,7 @@
         .service('utilityService', utilityService);
 
 
-    function utilityService() {
+    function utilityService($log) {
         this.getClassColor = function (clss) {
                 var classColorMap = {
                     "deathknight": "#C41F3B",
