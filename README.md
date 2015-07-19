@@ -9,9 +9,10 @@ Todo:
 * Implement item administration
 * Change header so a directive is used (reuse header code instead of copy-paste)
 * Consider using restangular (https://github.com/mgonto/restangular) instead of $resource
+* Add form validation for add item to player dialog.
+* (Tempoarily) save order bys and event filters
 
 Known bugs:
-* Add Loot -> item (typeahead) values have white font on white background.
 
 
 Done todos:
