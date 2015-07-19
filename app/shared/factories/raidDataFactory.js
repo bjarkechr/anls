@@ -103,9 +103,9 @@
                             updatePlayerArrays(raidFactResult.points, raidFactResult.afk, raidFactResult.queue, raidData);
 
                             updateInactivePlayers(raidFactResult.points, pointsFactResult, raidData);
-                            
+
                             utilityService.mergePlayerAndPlayerPoints(playerFactResult, raidData.activePlayers.concat(raidData.afkPlayers).concat(raidData.queuedPlayers).concat(raidData.inactivePlayers));
-                    
+
                             //Get instance ID from instance name
                             var instanceId = null;
                             for (var i = 0; i < instFactResult.length; i++) {
@@ -143,19 +143,19 @@
                                     var item = getItemById(raidData.events[i].item, raidData.instanceItems);
                                     if (item != null) {
                                         raidData.events[i].itemName = item.name;
-                                        raidData.events[i].itemId= item.id;
-					if(raidData.events[i].buyType != "Normal") {
-						raidData.events[i].buyType = "("+raidData.events[i].buyType+")";
-					} else {
-						raidData.events[i].buyType = "";
-					}
-					if(raidData.events[i].itemQuality == "Heroic") {
-						raidData.events[i].bonus = "?bonus=566"; 
-					} else if(raidData.events[i].itemQuality == "Mythic") {
-						raidData.events[i].bonus = "?bonus=567";
-					} else {
-						raidData.events[i].bonus = "";
-					}
+                                        raidData.events[i].itemId = item.id;
+                                        if (raidData.events[i].buyType != "Normal") {
+                                            raidData.events[i].buyType = "(" + raidData.events[i].buyType + ")";
+                                        } else {
+                                            raidData.events[i].buyType = "";
+                                        }
+                                        if (raidData.events[i].itemQuality == "Heroic") {
+                                            raidData.events[i].bonus = "?bonus=566";
+                                        } else if (raidData.events[i].itemQuality == "Mythic") {
+                                            raidData.events[i].bonus = "?bonus=567";
+                                        } else {
+                                            raidData.events[i].bonus = "";
+                                        }
                                     }
                                 } else {
                                     raidData.events[i].itemName = "";
