@@ -33,6 +33,12 @@
                 templateUrl: 'app/components/raid_administration/raidAdminDetailView.html',
                 controller: 'RaidAdminDetailViewController',
                 controllerAs: 'vm'
+            })
+            .state('itemManagement', {
+                url: '/itemManagement',
+                templateUrl: 'app/components/item_administration/itemAdminView.html',
+                controller: 'ItemAdminViewController',
+                controllerAs: 'vm'
             });
     }
 

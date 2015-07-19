@@ -97,7 +97,7 @@
 
                 setTimeout(function () {
                     loadRaids();
-                }, 1000);
+                }, 100);
             }
 
             function onError() {
@@ -111,7 +111,7 @@
             function onSuccess(value, status) {
                 setTimeout(function () {
                     loadRaids();
-                }, 1000);
+                }, 100);
 
             }
 
