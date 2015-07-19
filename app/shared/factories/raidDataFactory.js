@@ -149,6 +149,13 @@
 					} else {
 						raidData.events[i].buyType = "";
 					}
+					if(raidData.events[i].itemQuality == "Heroic") {
+						raidData.events[i].bonus = "?bonus=566"; 
+					} else if(raidData.events[i].itemQuality == "Mythic") {
+						raidData.events[i].bonus = "?bonus=567";
+					} else {
+						raidData.events[i].bonus = "";
+					}
                                     }
                                 } else {
                                     raidData.events[i].itemName = "";
