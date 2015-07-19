@@ -142,7 +142,20 @@
                                 if (raidData.events[i].type == "Buy") {
                                     var item = getItemById(raidData.events[i].item, raidData.instanceItems);
                                     if (item != null) {
-                                        raidData.events[i].itemName = item.name + " (" + raidData.events[i].itemQuality + ")";
+                                        raidData.events[i].itemName = item.name;
+                                        raidData.events[i].itemId= item.id;
+					if(raidData.events[i].buyType != "Normal") {
+						raidData.events[i].buyType = "("+raidData.events[i].buyType+")";
+					} else {
+						raidData.events[i].buyType = "";
+					}
+					if(raidData.events[i].itemQuality == "Heroic") {
+						raidData.events[i].bonus = "?bonus=566"; 
+					} else if(raidData.events[i].itemQuality == "Mythic") {
+						raidData.events[i].bonus = "?bonus=567";
+					} else {
+						raidData.events[i].bonus = "";
+					}
                                     }
                                 } else {
                                     raidData.events[i].itemName = "";

@@ -253,7 +253,7 @@
                                 <td>{{event.players.join()}}</td>
                                 <td>{{event.amount}}</td>
                                 <td>{{event.comment}}</td>
-                                <td>{{event.itemName}}</td>
+                                <td><a class="epic" href="http://www.wowhead.com/item={{event.itemId}}{{event.bonus}}">{{event.itemName}}</a> {{event.buyType}}</td>
                                 <td>
                                     <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteEvent(event)" ng-hide="!vm.enableEventEdit || !event.canBeModified"><span class="glyphicon glyphicon-remove"></span>
                                     </button>
