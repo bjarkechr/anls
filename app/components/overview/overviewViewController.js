@@ -14,6 +14,13 @@
         vm.playerPoints = [];
         vm.errorMsg = "";
 
+        vm.orderBy = {
+            "players": {
+                column: "ep",
+                desc: true
+            }
+        };
+        vm.setOrderBy = setOrderBy;
 
         loadPlayerPoints();
         loadRaids();
@@ -27,10 +34,10 @@
                         var playerPoints = results[0];
                         var players = results[1];
                         utilityService.mergePlayerAndPlayerPoints(players, playerPoints);
-                        
+
                         vm.playerPoints = playerPoints;
-                
-                $log.log(vm.playerPoints);
+
+                        $log.log(vm.playerPoints);
                     },
                     function (errorMsg) {
                         $log.log(errorMsg);
@@ -67,7 +74,14 @@
             }
         }
 
-
+        function setOrderBy(group, column) {
+            if (vm.orderBy[group].column == column) {
+                vm.orderBy[group].desc = !vm.orderBy[group].desc;
+            } else {
+                vm.orderBy[group].column = column;
+                vm.orderBy[group].desc = false;
+            }
+        }
 
     }
 
