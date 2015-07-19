@@ -14,6 +14,22 @@
         vm.status = "";
         vm.instance = "";
 
+        vm.orderBy = {
+            "activePlayers": {
+                column: "ep",
+                desc: true
+            },
+            "afkPlayers": {
+                column: "player",
+                desc: false
+            },
+            "queuedPlayers": {
+                column: "qp",
+                desc: true
+            }
+        };
+        vm.setOrderBy = setOrderBy;
+
         vm.events = [];
         vm.activePlayers = [];
         vm.afkPlayers = [];
@@ -43,6 +59,15 @@
                     function (errorMsg) {
                         vm.errorMsg = errorMsg;
                     });
+        }
+
+        function setOrderBy(group, column) {
+            if (vm.orderBy[group].column == column) {
+                vm.orderBy[group].desc = !vm.orderBy[group].desc;
+            } else {
+                vm.orderBy[group].column = column;
+                vm.orderBy[group].desc = false;
+            }
         }
     }
 

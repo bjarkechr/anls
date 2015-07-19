@@ -24,8 +24,23 @@
         vm.afkPlayers = [];
         vm.queuedPlayers = [];
         vm.inactivePlayers = [];
-
         vm.isInactivePlayersCollapsed = true;
+
+        vm.orderBy = {
+            "activePlayers": {
+                column: "ep",
+                desc: true
+            },
+            "afkPlayers": {
+                column: "player",
+                desc: false
+            },
+            "queuedPlayers": {
+                column: "qp",
+                desc: true
+            }
+        };
+        vm.setOrderBy = setOrderBy;
 
         vm.items = [];
         vm.buyTypes = [];
@@ -57,11 +72,6 @@
         loadBuyTypes();
 
         // Functions
-
-        function eventFilter(event) {
-
-            return (event.type == "Buy" && !vm.eventFilterBuy) || (event.type == "Add" && !vm.eventFilterAdd) || (event.type == "Bonus" && !vm.eventFilterBonus) || ((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) || ((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || (event.type == "Start" || event.type == "Finish");;
-        }
 
         function loadRaidData() {
             raidDataFactory.getRaidData(vm.raidId)
@@ -99,6 +109,20 @@
             function onLoaded(data) {
                 vm.buyTypes = data;
             }
+        }
+
+        function setOrderBy(group, column) {
+            if (vm.orderBy[group].column == column) {
+                vm.orderBy[group].desc = !vm.orderBy[group].desc;
+            } else {
+                vm.orderBy[group].column = column;
+                vm.orderBy[group].desc = false;
+            }
+        }
+
+        function eventFilter(event) {
+
+            return (event.type == "Buy" && !vm.eventFilterBuy) || (event.type == "Add" && !vm.eventFilterAdd) || (event.type == "Bonus" && !vm.eventFilterBonus) || ((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) || ((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || (event.type == "Start" || event.type == "Finish");;
         }
 
         function deleteEvent(event) {
