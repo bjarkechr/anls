@@ -99,7 +99,7 @@
 
             var promise = blizzardItemFactory.get({
                 itemId: vm.addItem_id,
-                context: 'raid-normal'
+                context: 'raid-heroic'
             }).$promise;
 
             promise.then(function (result) {
