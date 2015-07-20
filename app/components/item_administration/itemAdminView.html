@@ -45,12 +45,60 @@
         <div class="col-md-12">
             <h2>Add Item <small>Create a new item</small></h2>
 
-            <form ng-submit="vm.addItem()">
+            <form name="addItemForm" class="form-horizontal" ng-submit="vm.addItem(addItemForm)">
+
                 <div class="form-group">
-                    <label for="itemname">Item Name</label>
-                    <input type="text" id="itemname" class="form-control" ng-model="vm.addItem_ItemName" ng-required="true" />
+                    <div class="col-sm-1">
+                        <label for="instancename">Instance</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="instancename" ng-model="vm.addItem_instance" ng-options="instance.name for instance in vm.instances" ng-required="true"></select>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success">Add</button>
+
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <label for="itemId">Item Id</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input type="text" id="itemId" class="form-control" ng-model="vm.addItem_id" ng-required="true" ng-change="vm.onItemIdOrNameChanged()" />
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="vm.fetchItemData()" ng-disabled="vm.addItem_id == null || vm.addItem_id == '' || vm.working">
+                                <img src="/assets/img/battlenet-logo.png" style="width:17px;height:17px;" /><span> Get</span>
+                            </button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" ng-hide="vm.addItem_wowHeadLink == null || vm.addItem_wowHeadLink == ''">
+                        <div class="form-control-static"><a href="{{vm.addItem_wowHeadLink}}" class="epic">{{vm.addItem_wowHeadLinkName}}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <label for="itemname">Item Name</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="itemname" class="form-control" ng-model="vm.addItem_name" ng-required="true" ng-change="vm.onItemIdOrNameChanged()" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-1">
+                        <label for="slot">Slot</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" id="slot" class="form-control" ng-model="vm.addItem_slot" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-4">
+                        <button type="submit" class="btn btn-success" ng-disabled="vm.working">Add</button>
+                        <button type="button" class="btn btn-default" ng-disabled="vm.working" ng-click="vm.clearAddItem(addItemForm)">Clear</button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>
@@ -72,11 +120,16 @@
                         <th></th>
                     </tr>
                     <tr ng-repeat="item in vm.items | orderBy:'itemname'">
-                        <td>{{item.name}}</td>
+                        <td><a class="epic" href="{{item.wowHeadLink}}">{{item.name}}</a> (
+                            <a class="epic" href="{{item.wowHeadLinkHeroic}}">Heroic</a> / <a class="epic" href="{{item.wowHeadLinkMythic}}">Mythic</a>)
+                        </td>
                         <td>{{item.id}}</td>
                         <td>{{item.instance}}</td>
                         <td>{{item.slot}}</td>
-                        <td></td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="vm.deleteItem(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                        </td>
                     </tr>
                 </table>
             </div>

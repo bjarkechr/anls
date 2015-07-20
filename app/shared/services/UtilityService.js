@@ -47,6 +47,52 @@
                         $log.error("No player record found for: " + playerPoints[i].player);
                     }
                 }
+            },
+            this.getWowHeadLink = function (itemId, itemQuality) {
+
+                var link = "http://www.wowhead.com/item=" + itemId;
+
+                if (itemQuality == "Heroic") {
+                    link += "?bonus=566";
+                } else if (itemQuality == "Mythic") {
+                    link += "?bonus=567";
+                } else {
+                    //Nothing
+                }
+                return link;
+            },
+            this.getSlotNameFromIndex = function (index) {
+                var slotType = {
+                    '0': 'None',
+                    '1': 'Head',
+                    '2': 'Neck',
+                    '3': 'Shoulders',
+                    '4': 'Shirt',
+                    '5': 'Chest',
+                    '6': 'Waist',
+                    '7': 'Legs',
+                    '8': 'Feet',
+                    '9': 'Wrist',
+                    '10': 'Hands',
+                    '11': 'Finger',
+                    '12': 'Trinket',
+                    '13': 'One-Hand',
+                    '14': 'Shield',
+                    '15': 'Ranged',
+                    '16': 'Cloak',
+                    '17': 'Two-Hand',
+                    '18': 'Bag',
+                    '19': 'Tabard',
+                    '20': 'Chest', //Robe
+                    '21': 'Weapon', //Main Hand
+                    '22': 'Weapon', //Off Hand
+                    '23': 'Held In Off-hand',
+                    '24': 'Ammo',
+                    '25': 'Thrown',
+                    '26': 'Ranged Right',
+                    '28': 'Relic'
+                };
+                return slotType[index];
             }
     }
 
