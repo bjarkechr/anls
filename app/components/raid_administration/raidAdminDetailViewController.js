@@ -54,6 +54,8 @@
         vm.eventFilterQueue = false;
         vm.eventFilterBuy = false;
 
+        vm.refresh = refresh;
+
         vm.addPlayerToRaid = addPlayerToRaid;
         vm.deleteEvent = deleteEvent;
         vm.afkPlayer = afkPlayer;
@@ -74,6 +76,10 @@
         loadBuyTypes();
 
         // Functions
+
+        function refresh() {
+            loadRaidData();
+        }
 
         function loadRaidData() {
             raidDataFactory.getRaidData(vm.raidId)

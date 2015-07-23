@@ -22,10 +22,18 @@
         };
         vm.setOrderBy = setOrderBy;
 
+        vm.refresh = refresh;
+
         loadPlayerPoints();
         loadRaids();
 
         // Functions
+
+        function refresh() {
+            loadPlayerPoints();
+            loadRaids();
+        }
+
         function loadPlayerPoints() {
             vm.playerPoints.length = 0;
 
@@ -36,8 +44,6 @@
                         utilityService.mergePlayerAndPlayerPoints(players, playerPoints);
 
                         vm.playerPoints = playerPoints;
-
-                        $log.log(vm.playerPoints);
                     },
                     function (errorMsg) {
                         $log.log(errorMsg);

@@ -30,12 +30,19 @@
 
         vm.deleteItem = deleteItem;
 
+        vm.refresh = refresh;
+
 
         // Query Rest services
         loadItems();
         loadInstances();
 
         // Functions
+
+        function refresh() {
+            loadItems();
+            loadInstances();
+        }
 
         function loadItems() {
             vm.items.length = 0;

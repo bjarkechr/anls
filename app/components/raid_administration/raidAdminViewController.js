@@ -27,12 +27,19 @@
         vm.addRaidSuccess = false;
         vm.deleteRaidErrorOccured = false;
         vm.datePickerOpened = false;
+        
+        vm.refresh = refresh;
 
         // Query Rest services
         loadRaids();
         loadInstances();
 
         // Functions
+        function refresh() {
+            loadRaids();
+            loadInstances();
+        }
+
         function loadRaids() {
             vm.activeRaids.length = 0;
             vm.plannedRaids.length = 0;

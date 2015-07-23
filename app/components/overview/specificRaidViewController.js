@@ -37,10 +37,16 @@
         vm.inactivePlayers = [];
 
         vm.isInactivePlayersCollapsed = true;
+        
+        vm.refresh = refresh;
 
         loadRaidData();
 
         // Functions
+        
+        function refresh() {
+            loadRaidData();
+        }
 
         function loadRaidData() {
             raidDataFactory.getRaidData(vm.raidId)
