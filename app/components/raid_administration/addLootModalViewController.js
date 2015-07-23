@@ -5,7 +5,7 @@
         .module('anlsApp')
         .controller('AddLootModalViewController', AddLootModalViewController);
 
-    function AddLootModalViewController($log, $modalInstance, players, items, selectedPlayer, buyTypes) {
+    function AddLootModalViewController($log, $modalInstance, players, items, selectedPlayer, buyTypes, itemQuality) {
         var vm = this;
 
         vm.players = players;
@@ -18,6 +18,7 @@
         vm.selectedItem = "";
         vm.comment = "";
 
+        setItemQuality(itemQuality);
 
         vm.ok = function () {
             $modalInstance.close({
@@ -33,11 +34,16 @@
             $modalInstance.dismiss('cancel');
         };
 
-
-
         // Functions
 
+        function setItemQuality(itemQuality) {
+            $log.log(itemQuality);
 
+            if (itemQuality != null && itemQuality != '') {
+                vm.selectedItemQuality = itemQuality;
+                $log.log("waht?");
+            }
+        }
 
         function getItemQualities() {
             return ["Normal", "Heroic", "Mythic"];

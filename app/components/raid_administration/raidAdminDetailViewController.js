@@ -63,10 +63,12 @@
         vm.startRaid = startRaid;
         vm.finishRaid = finishRaid;
 
-
         vm.openAddLootModal = openAddLootModal;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
 
+        vm.lastItemQualityLootGiven = "";
+
+        // Load data
         loadRaidData();
 
         loadBuyTypes();
@@ -174,20 +176,6 @@
             createAndSendEvent("ReturnQueue", playername, null, "Error occured while returning player from queue.");
         }
 
-        function addLootToPlayer(loot) {
-            createAndSendEvent("Buy", loot.player.player, modifyEvent, "Error occured while adding item to player.");
-
-            function modifyEvent(event) {
-                event.buyType = loot.buyType;
-                event.item = loot.item.id;
-                event.itemQuality = loot.itemQuality;
-
-                if (loot.comment != null) {
-                    event.comment = loot.comment;
-                }
-            }
-        }
-
         function createAndSendEvent(type, playername, modifyEventCallback, errorMsg) {
             vm.errorMsg = "";
 
@@ -241,6 +229,22 @@
             }
         }
 
+        function addLootToPlayer(loot) {
+            vm.lastItemQualityLootGiven = loot.itemQuality;
+
+            createAndSendEvent("Buy", loot.player.player, modifyEvent, "Error occured while adding item to player.");
+
+            function modifyEvent(event) {
+                event.buyType = loot.buyType;
+                event.item = loot.item.id;
+                event.itemQuality = loot.itemQuality;
+
+                if (loot.comment != null) {
+                    event.comment = loot.comment;
+                }
+            }
+        }
+
         function openAddLootModal(player) {
             var modalInstance = $modal.open({
                 animation: true,
@@ -258,6 +262,9 @@
                     },
                     buyTypes: function () {
                         return vm.buyTypes;
+                    },
+                    itemQuality: function () {
+                        return vm.lastItemQualityLootGiven;
                     }
                 }
             });
