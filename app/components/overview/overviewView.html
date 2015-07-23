@@ -113,7 +113,7 @@
                         <th>Instance</th>
                         <th>Date and time</th>
                     </tr>
-                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'">
+                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'.desc">
                         <td><a ui-sref="viewRaid({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>

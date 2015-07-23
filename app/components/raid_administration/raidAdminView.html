@@ -135,7 +135,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'">
+                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'.desc">
                         <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
