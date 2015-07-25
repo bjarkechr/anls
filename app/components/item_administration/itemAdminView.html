@@ -94,7 +94,7 @@
                         <label for="slot">Slot</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" id="slot" class="form-control" ng-model="vm.addItem_slot" />
+                        <select class="form-control" id="slot" ng-model="vm.addItem_slot" ng-options="slot for slot in vm.slots" ng-required="true"></select>
                     </div>
                 </div>
 
@@ -113,6 +113,29 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Items <small>Overview of existing items</small></h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <label class="control-label" for="instancenameFilter">Filter by instance</label>
+                    <select class="form-control" style="color: #000" id="instancenameFilter" ng-model="vm.instance_filter" ng-options="instance.name for instance in vm.instances">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="itemnameFilter">Filter by name</label>
+                    <input type="text" class="form-control" id="itemnameFilter" ng-model="vm.itemname_filter" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <p />
+    <div class="row">
+        <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <h3 class="panel-title">Items</h3>
@@ -125,7 +148,7 @@
                         <th>Slot</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="item in vm.items | orderBy:'itemname'">
+                    <tr ng-repeat="item in vm.items | filter: {name: vm.itemname_filter, instance: vm.instance_filter.name} | orderBy:'itemname'">
                         <td><a class="epic" href="{{item.wowHeadLink}}">{{item.name}}</a> (
                             <a class="epic" href="{{item.wowHeadLinkHeroic}}">Heroic</a> / <a class="epic" href="{{item.wowHeadLinkMythic}}">Mythic</a>)
                         </td>

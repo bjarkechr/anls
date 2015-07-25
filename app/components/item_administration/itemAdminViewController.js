@@ -5,14 +5,16 @@
         .module('anlsApp')
         .controller('ItemAdminViewController', ItemAdminViewController);
 
-    function ItemAdminViewController($log, dataFormatService, utilityService, itemFactory, blizzardItemFactory, instanceFactory) {
+    function ItemAdminViewController($log, dataFormatService, utilityService, itemFactory, blizzardItemFactory, instanceFactory, slotFactory) {
         var vm = this;
 
         // Properties
         vm.errorMsg = "";
+        vm.working = false;
 
         vm.items = [];
         vm.instances = [];
+        vm.slots = [];
 
         vm.addItem_name = "";
         vm.addItem_id = "";
@@ -22,7 +24,8 @@
         vm.addItem_wowHeadLinkName = "";
         vm.onItemIdOrNameChanged = onItemIdOrNameChanged;
 
-        vm.working = false;
+        vm.instance_filter = "";
+        vm.itemname_filter = "";
 
         vm.addItem = addItem;
         vm.clearAddItem = clearAddItem;
@@ -32,16 +35,15 @@
 
         vm.refresh = refresh;
 
-
         // Query Rest services
-        loadItems();
-        loadInstances();
+        refresh();
 
         // Functions
 
         function refresh() {
             loadItems();
             loadInstances();
+            loadSlots();
         }
 
         function loadItems() {
@@ -70,7 +72,7 @@
                 .then(function (data) {
                     vm.instances = data;
 
-                    vm.selectedInstance = vm.instances[0];
+                    vm.addItem_instance = vm.instances[0];
 
                     // For now hard code Hellfire Citadel as default instance
                     for (var i = 0; i < vm.instances.length; i++) {
@@ -78,6 +80,14 @@
                             vm.addItem_instance = vm.instances[i];
                         }
                     }
+                });
+        }
+
+        function loadSlots() {
+            slotFactory.query(null).$promise
+                .then(function (data) {
+                    vm.slots = data;
+                    vm.addItem_slot = vm.slots[0];
                 });
         }
 
@@ -186,6 +196,10 @@
                             $log.error(error);
                         }
                     });
+        }
+
+        function getSlots() {
+
         }
     }
 
