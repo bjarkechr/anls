@@ -39,6 +39,12 @@
                 templateUrl: 'app/components/item_administration/itemAdminView.html',
                 controller: 'ItemAdminViewController',
                 controllerAs: 'vm'
+            })
+            .state('playerManagement', {
+                url: '/playerManagement',
+                templateUrl: 'app/components/player_administration/playerAdminView.html',
+                controller: 'PlayerAdminViewController',
+                controllerAs: 'vm'
             });
     }
 
