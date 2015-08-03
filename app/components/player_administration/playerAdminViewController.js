@@ -95,7 +95,7 @@
                         }, 100);
                     },
                     function (error) {
-                        if (error.data != null || error.data != "") {
+                        if (error.data != null && error.data != "") {
                             vm.errorMsg = error.data;
                         } else {
                             vm.errorMsg = "Error occured while adding new player to server. Check development log for details."

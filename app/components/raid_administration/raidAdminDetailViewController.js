@@ -67,6 +67,7 @@
 
         vm.openAddLootModal = openAddLootModal;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
+        vm.openAddBonusModal = openAddBonusModal;
 
         vm.lastItemQualityLootGiven = "";
 
@@ -163,32 +164,50 @@
         }
 
         function addPlayerToRaid(player) {
-            createAndSendEvent("Add", player.player, null, "Error occured while adding player to raid.");
+            createAndSendEvent("Add", [player.player], null, "Error occured while adding player to raid.");
         }
 
         function afkPlayer(playername) {
-            createAndSendEvent("AFK", playername, null, "Error occured while setting player AFK.");
+            createAndSendEvent("AFK", [playername], null, "Error occured while setting player AFK.");
         }
 
         function returnAfkPlayer(playername) {
-            createAndSendEvent("ReturnAFK", playername, null, "Error occured while returning player from afk.");
+            createAndSendEvent("ReturnAFK", [playername], null, "Error occured while returning player from afk.");
         }
 
         function queuePlayer(playername) {
-            createAndSendEvent("Queue", playername, null, "Error occured while queuing player.");
+            createAndSendEvent("Queue", [playername], null, "Error occured while queuing player.");
         }
 
         function returnQueuePlayer(playername) {
-            createAndSendEvent("ReturnQueue", playername, null, "Error occured while returning player from queue.");
+            createAndSendEvent("ReturnQueue", [playername], null, "Error occured while returning player from queue.");
         }
 
-        function createAndSendEvent(type, playername, modifyEventCallback, errorMsg) {
+        function addBonusToPlayers(bonusTxt, bonusAmount, players) {
+            var len = players.length;
+            if (len > 0) {
+
+                var playerNames = [];
+
+                for (var i = 0; i < len; i++) {
+                    playerNames.push(players[i].player);
+                }
+
+                createAndSendEvent("Bonus", playerNames, function (event) {
+                        event.amount = bonusAmount;
+                        event.comment = bonusTxt;
+                    },
+                    "Error occured while adding bonus to players.");
+            }
+        }
+
+        function createAndSendEvent(type, players, modifyEventCallback, errorMsg) {
             vm.errorMsg = "";
 
             var event = new eventFactory();
             event.type = type;
-            if (playername != null) {
-                event.players = [playername];
+            if (players != null) {
+                event.players = players;
             }
             event.date = dataFormatService.dateToString(new Date());
 
@@ -238,7 +257,7 @@
         function addLootToPlayer(loot) {
             vm.lastItemQualityLootGiven = loot.itemQuality;
 
-            createAndSendEvent("Buy", loot.player.player, modifyEvent, "Error occured while adding item to player.");
+            createAndSendEvent("Buy", [loot.player.player], modifyEvent, "Error occured while adding item to player.");
 
             function modifyEvent(event) {
                 event.buyType = loot.buyType;
@@ -295,6 +314,30 @@
 
             modalInstance.result.then(function (eventDate) {
                     modifyEvent(event, eventDate);
+                },
+                function () {});
+        }
+
+        function openAddBonusModal() {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'app/components/raid_administration/addBonusModalView.html',
+                controller: 'AddBonusModalViewController as vm',
+                resolve: {
+                    activePlayers: function () {
+                        return vm.activePlayers;
+                    },
+                    queuedPlayers: function () {
+                        return vm.queuedPlayers;
+                    },
+                    afkPlayers: function () {
+                        return vm.afkPlayers;
+                    }                    
+                }
+            });
+
+            modalInstance.result.then(function (bonus) {
+                    addBonusToPlayers(bonus.bonusTxt, bonus.bonusAmount, bonus.bonusPlayers);
                 },
                 function () {});
         }
