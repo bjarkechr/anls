@@ -33,9 +33,14 @@
 <div class="jumbotron">
     <div class="container">
         <h1>Raid Detail <small>{{vm.status}}</small></h1>
-        <p>Manage raid on {{vm.instance}}, {{vm.startDisplayDateStr}} </p>
-        <button type="button" class="btn btn-success btn-lg" ng-click="vm.startRaid()" ng-hide="!vm.isStartRaidPossible">Start</button>
-        <button type="button" class="btn btn-success btn-lg" ng-click="vm.finishRaid()" ng-hide="!vm.isFinishRaidPossible">Finish</button>
+        <p>Manage raid on {{vm.instance}}, {{vm.startDisplayDateStr}}
+            <br /> Raid is currently on: {{vm.raidType}}
+            <button type="button" class="btn btn-primary btn-sm" ng-click="vm.setRaidType('Farm')" ng-hide="vm.raidType == 'Farm'">Set To Farm</button>
+            <button type="button" class="btn btn-primary btn-sm" ng-click="vm.setRaidType('Progress')" ng-hide="vm.raidType == 'Progress'">Set To Progress</button> </p>
+                <button type="button" class="btn btn-success btn-lg" ng-click="vm.startRaid()" ng-hide="!vm.isStartRaidPossible">Start Raid</button>
+                <button type="button" class="btn btn-success btn-lg" ng-click="vm.finishRaid()" ng-hide="!vm.isFinishRaidPossible">Finish Raid</button>
+
+                
     </div>
 </div>
 

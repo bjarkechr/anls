@@ -16,6 +16,7 @@
 
         vm.instance = "";
         vm.status = "";
+        vm.raidType = "";
         vm.startDisplayDateStr;
         vm.isStartRaidPossible = false;
         vm.isFinishRaidPossible = false;
@@ -64,6 +65,7 @@
         vm.returnQueuePlayer = returnQueuePlayer;
         vm.startRaid = startRaid;
         vm.finishRaid = finishRaid;
+        vm.setRaidType = setRaidType;
 
         vm.openAddLootModal = openAddLootModal;
         vm.openSetNewEventTimestampModal = openSetNewEventTimestampModal;
@@ -90,6 +92,7 @@
 
                         vm.instance = result.instance;
                         vm.status = result.status;
+                        vm.raidType = result.raidType;
                         vm.startDisplayDateStr = result.startDisplayDateStr;
                         vm.isStartRaidPossible = result.isStartRaidPossible;
                         vm.isFinishRaidPossible = result.isFinishRaidPossible;
@@ -131,12 +134,12 @@
 
         function eventFilter(event) {
 
-            return (event.type == "Buy" && !vm.eventFilterBuy) || 
-			(event.type == "Add" && !vm.eventFilterAdd) || 
-			(event.type == "Bonus" && !vm.eventFilterBonus) || 
-			((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) || 
-			((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || 
-			(event.type == "Start" || event.type == "Finish" || event.type == "Farm" || event.type == "Progress");;
+            return (event.type == "Buy" && !vm.eventFilterBuy) ||
+                (event.type == "Add" && !vm.eventFilterAdd) ||
+                (event.type == "Bonus" && !vm.eventFilterBonus) ||
+                ((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) ||
+                ((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) ||
+                (event.type == "Start" || event.type == "Finish" || event.type == "Farm" || event.type == "Progress");;
         }
 
         function deleteEvent(event) {
@@ -204,6 +207,10 @@
                     },
                     "Error occured while adding bonus to players.");
             }
+        }
+
+        function setRaidType(type) {
+            createAndSendEvent(type, null, null, "Error occured while setting raid type to " + type + ".");
         }
 
         function createAndSendEvent(type, players, modifyEventCallback, errorMsg) {
@@ -337,7 +344,7 @@
                     },
                     afkPlayers: function () {
                         return vm.afkPlayers;
-                    }                    
+                    }
                 }
             });
 

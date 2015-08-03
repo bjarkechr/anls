@@ -84,6 +84,7 @@
                             var playerFactResult = results[3];
 
                             raidData.instance = raidFactResult.instance;
+                            raidData.raidType = raidFactResult.raidType;
                             raidData.startDate = dataFormatService.stringToDate(raidFactResult.start);
                             raidData.startDisplayDateStr = dataFormatService.dateToDisplayString(raidData.startDate);
                             raidData.status = raidFactResult.status;
@@ -144,13 +145,13 @@
                                     if (item != null) {
                                         raidData.events[i].itemName = item.name;
                                         raidData.events[i].itemId = item.id;
-                                        
+
                                         if (raidData.events[i].buyType != "Normal") {
                                             raidData.events[i].buyTypeDisp = "(" + raidData.events[i].buyType + ")";
                                         } else {
                                             raidData.events[i].buyTypeDisp = "";
                                         }
-                                        
+
                                         raidData.events[i].wowHeadLink = utilityService.getWowHeadLink(item.id, raidData.events[i].itemQuality);
                                     }
                                 } else {
