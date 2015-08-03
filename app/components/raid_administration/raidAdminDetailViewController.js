@@ -131,7 +131,12 @@
 
         function eventFilter(event) {
 
-            return (event.type == "Buy" && !vm.eventFilterBuy) || (event.type == "Add" && !vm.eventFilterAdd) || (event.type == "Bonus" && !vm.eventFilterBonus) || ((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) || ((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || (event.type == "Start" || event.type == "Finish");;
+            return (event.type == "Buy" && !vm.eventFilterBuy) || 
+			(event.type == "Add" && !vm.eventFilterAdd) || 
+			(event.type == "Bonus" && !vm.eventFilterBonus) || 
+			((event.type == "AFK" || event.type == "ReturnAFK") && !vm.eventFilterAfk) || 
+			((event.type == "Queue" || event.type == "ReturnQueue") && !vm.eventFilterQueue) || 
+			(event.type == "Start" || event.type == "Finish" || event.type == "Farm" || event.type == "Progress");;
         }
 
         function deleteEvent(event) {
