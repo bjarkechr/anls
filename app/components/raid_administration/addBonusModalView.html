@@ -53,7 +53,10 @@
                     </tr>
                 </table>
             </div>
-            <button type="button" class="btn btn-default">Mark All</button>
+            Mark:
+            <button type="button" class="btn btn-sm btn-default" ng-click="vm.markPlayers('All')">All</button>
+            <button type="button" class="btn btn-sm btn-default" ng-click="vm.markPlayers('Active')">Active</button>
+            <button type="button" class="btn btn-sm btn-default" ng-click="vm.markPlayers('ActiveQueued')">Active &amp; Queued</button>
 
         </div>
     </div>

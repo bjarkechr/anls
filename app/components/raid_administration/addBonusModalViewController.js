@@ -17,6 +17,8 @@
         vm.ok = acceptModal;
 
         vm.cancel = cancelModal;
+        
+        vm.markPlayers = markPlayers;
 
         init();
 
@@ -78,11 +80,14 @@
             $modalInstance.dismiss('cancel');
         };
 
-        function checkPlayers(who) {
+        function markPlayers(who) {
 
             for (var i = 0; i < vm.players.length; i++) {
                 if (who == "All" || (who == "Active" && vm.players[i].status == "Active") || (who == "ActiveQueued" && (vm.players[i].status == "Active" || vm.players[i].status == "Queued"))) {
-                    vm.players.isChecked = true;
+                    vm.players[i].isChecked = true;
+                }
+                else {
+                    vm.players[i].isChecked = false;
                 }
             }
         }

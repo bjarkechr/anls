@@ -139,6 +139,24 @@
                                 raidData.events[i].displayDate = dataFormatService.dateToDisplayString(raidData.events[i].parsedDate);
                                 raidData.events[i].canBeModified = raidData.events[i].id != null;
 
+                                if (raidData.events[i].players != null && raidData.events[i].players.length > 0) {
+
+                                    if (raidData.events[i].players.length < 4) {
+                                        raidData.events[i].playersDisp = raidData.events[i].players.join();
+                                    } else {
+                                        for (var pi = 0; pi < 4; pi++) {
+                                            if (pi != 0) {
+                                                raidData.events[i].playersDisp += ", ";
+                                            } else {
+                                                raidData.events[i].playersDisp = "";
+                                            }
+
+                                            raidData.events[i].playersDisp += raidData.events[i].players[pi];
+                                        }
+                                        raidData.events[i].playersDisp += "...";
+                                    }
+                                }
+
                                 // For buy events lookup item by Id and add name of bought item
                                 if (raidData.events[i].type == "Buy") {
                                     var item = getItemById(raidData.events[i].item, raidData.instanceItems);
