@@ -39,6 +39,10 @@
             "queuedPlayers": {
                 column: "qp",
                 desc: true
+            },
+            "events":{
+                column: "date",
+                desc: true
             }
         };
         vm.setOrderBy = setOrderBy;

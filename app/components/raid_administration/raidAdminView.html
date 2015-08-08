@@ -88,7 +88,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.activeRaids | orderBy:'start'">
+                    <tr ng-repeat="raid in vm.activeRaids | orderBy:'-start'">
                         <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
@@ -108,7 +108,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.plannedRaids | orderBy:'start'">
+                    <tr ng-repeat="raid in vm.plannedRaids | orderBy:'-start'">
                         <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
@@ -135,7 +135,7 @@
                         <th>Date and time</th>
                         <th></th>
                     </tr>
-                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'start'.desc">
+                    <tr ng-repeat="raid in vm.finishedRaids | orderBy:'-start'">
                         <td><a ui-sref="raidDetailManagement({raidId: raid.id})">{{raid.instance}}</a>
                         </td>
                         <td>{{raid.startDisplayDateStr}}</td>
