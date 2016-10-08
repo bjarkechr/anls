@@ -9,6 +9,7 @@
     function utilityService($log) {
         this.getClassColor = function (clss) {
                 var classColorMap = {
+		    "demonhunter": "#A330C9",
                     "deathknight": "#C41F3B",
                     "druid": "#FF7D0A",
                     "hunter": "#ABD473",
